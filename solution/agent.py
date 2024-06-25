@@ -150,7 +150,7 @@ class Agent:
         5. Update KB.wampa, and KB.safe_rooms accordigly
         """
 
-        if self.loc not in self.KB.breeze | self.KB.stench and "breeze":
+        if self.loc not in self.KB.breeze | self.KB.stench:
             self.KB.safe_rooms.update(set(self.adjacent_rooms(self.loc))) 
 
         self.infer_wall_locations()
