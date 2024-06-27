@@ -122,16 +122,21 @@ class WampaWorld:
     
     def get_location(self):
         x,y = self.agent.loc
-        return [x+1,y+1]
+        return [x+1, y+1]
     
     def get_blaster(self):
         return self.agent.blaster
     
 
 # DEFINE R2D2's POSSIBLE ACTIONS
-def next_actions(w):
-    """TODO: Define R2D2's possible actions based on the current state of the world."""
-    pass
+def all_safe_next_actions(w):
+    """TODO: Define R2D2's possible safe actions based on the current state of the world."""
+    all_actions = ["forward", "left", "right", "shoot", "grab", "climb"]
+    return safe_next_actions
+
+def choose_next_action(w):
+    """TODO: Choose next action from all safe next actions. You can prioritize some based on state."""
+    return action
 
 
 # RUN THE GAME
@@ -141,6 +146,5 @@ while True:
     percepts = w.get_percepts()
     w.agent.record_percepts(percepts, w.agent.loc)
     w.agent.inference_algorithm()
-    actions = next_actions(w)
-    shuffle(actions)
-    w.take_action(actions.pop())
+    action = choose_next_action(w)
+    w.take_action(action)

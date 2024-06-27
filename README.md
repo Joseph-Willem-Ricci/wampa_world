@@ -44,7 +44,7 @@ Contains R2D2's constructor including initial knowledge base class, KB. Familiar
 - Define a list of rooms from self.KB.possible_rooms that could be a pit or wampa.
 - Use itertools combinations to return a set of all possible_worlds of (pit_rooms, wampa_room)
 
-`find_subset_of_worlds_consistent_with_KB(self, possible_worlds)`
+`find_model_of_KB(self, possible_worlds)`
 - Given all possible_worlds, return the subset of possible worlds that is consistent with the KB (e.g. whether it is possible that each pit_room in pit_rooms could be a pit, etc.)
 
 `query_set_of_worlds(self, query_feature, room, worlds)`
@@ -80,5 +80,8 @@ Contains the WampaWorld class which defines gameplay, the main gameplay loop, an
 
 ### TODOs:
 
-`next_actions(w)`
-- Define R2D2's possible actions based on the current state of the world.
+`all_safe_next_actions(w)`
+- Define R2D2's possible safe actions based on the current state of the world.
+
+`choose_next_action(w)`
+- Choose next action from all safe next actions. You can prioritize some based on state.

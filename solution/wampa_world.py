@@ -122,43 +122,55 @@ class WampaWorld:
     
     def get_location(self):
         x,y = self.agent.loc
-        return [x+1,y+1]
+        return [x+1, y+1]
     
     def get_blaster(self):
         return self.agent.blaster
     
 
 # DEFINE R2D2's POSSIBLE ACTIONS
-def next_actions(w):
-    """Define R2D2's possible actions based on the current state of the world."""
+def all_safe_next_actions(w):
+    """Define R2D2's possible safe actions based on the current state of the world."""
     actions = ['left', 'right']
     x, y = w.agent.loc
     dx, dy = w.agent.orientation_to_delta[get_direction(w.agent.degrees)]
     forward_room = (x+dx, y+dy)
     if forward_room in w.agent.KB.safe_rooms and forward_room not in w.agent.KB.walls:
-        if forward_room not in w.agent.KB.visited_rooms or (w.agent.has_luke and (dx == -1 or dy == -1)):
-            actions.clear()
         actions.append('forward')
     if w.agent.blaster and is_facing_wampa(w.agent):
-        actions.clear()
         actions.append('shoot')
     if w.agent.has_luke and w.agent.loc == (0, 0):
-        actions.clear()
         actions.append('climb')
     if w.agent.KB.luke == w.agent.loc and not w.agent.has_luke:
-        actions.clear()
         actions.append('grab')
 
     return actions
 
+def choose_next_action(w):
+    """Choose next action from all safe next actions. You can prioritize some based on state."""
+    actions = all_safe_next_actions(w)
+    if 'climb' in actions:
+        return 'climb'
+    elif 'grab' in actions:
+        return 'grab'
+    elif 'shoot' in actions:
+        return 'shoot'
+    x, y = w.agent.loc
+    dx, dy = w.agent.orientation_to_delta[get_direction(w.agent.degrees)]
+    forward_room = (x+dx, y+dy)
+    if 'forward' in actions and (forward_room not in w.agent.KB.visited_rooms or \
+         (w.agent.has_luke and (dx == -1 or dy == -1))):
+        return 'forward'
+    else:
+        shuffle(actions)
+        return actions.pop()
 
 # RUN THE GAME
-w = WampaWorld(S3)
+w = WampaWorld(S4)
 while True:
     visualize_world(w, w.agent.loc, get_direction(w.agent.degrees))
     percepts = w.get_percepts()
     w.agent.record_percepts(percepts, w.agent.loc)
     w.agent.inference_algorithm()
-    actions = next_actions(w)
-    shuffle(actions)
-    w.take_action(actions.pop())
+    action = choose_next_action(w)
+    w.take_action(action)
