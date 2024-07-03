@@ -131,12 +131,18 @@ class WampaWorld:
 # DEFINE R2D2's POSSIBLE ACTIONS
 def all_safe_next_actions(w):
     """TODO: Define R2D2's possible safe actions based on the current state of the world."""
-    all_actions = ["forward", "left", "right", "shoot", "grab", "climb"]
-    return safe_next_actions
+    safe_actions = []
+    x, y = w.agent.loc
+    dx, dy = w.agent.orientation_to_delta[get_direction(w.agent.degrees)]
+    forward_room = (x+dx, y+dy)
+    ...
+    return safe_actions
 
 def choose_next_action(w):
     """TODO: Choose next action from all safe next actions. You can prioritize some based on state."""
-    return action
+    actions = all_safe_next_actions(w)
+    ...
+    return actions
 
 
 # RUN THE GAME

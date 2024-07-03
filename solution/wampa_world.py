@@ -166,7 +166,7 @@ def choose_next_action(w):
         return actions.pop()
 
 # RUN THE GAME
-w = WampaWorld(S5)
+w = WampaWorld(S1)
 while True:
     visualize_world(w, w.agent.loc, get_direction(w.agent.degrees))
     percepts = w.get_percepts()

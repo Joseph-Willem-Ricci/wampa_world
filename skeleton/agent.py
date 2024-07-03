@@ -29,7 +29,7 @@ class Agent:
         self.has_luke = False
         self.percepts = ['stench', 'breeze', 'gasp', 'bump', 'scream']
         self.orientation_to_delta = {
-        "up": (0, 1),
+        "up": (0, 1),  # (dx, dy)
         "down": (0, -1),
         "left": (-1, 0),
         "right": (1, 0)
@@ -45,43 +45,57 @@ class Agent:
     def adjacent_rooms(self, room):
         """TODO: Returns a set of tuples representing all possible adjacent rooms to 'room'
         that aren't known to be walls."""
+        ...
         pass
 
     def record_percepts(self, sensed_percepts, current_location):
         """TODO: Update the percepts in agent's KB with the percepts sensed in the current 
         location, and update safe_rooms, visited_rooms, and possible_rooms accordingly."""
+        self.loc = current_location
+        present_percepts = set(p for p in sensed_percepts if p)
+        ...
         pass
+        
 
     def room_could_be_pit(self, room):
-        """TODO: Return True if the room could be a wampa given KB, False otherwise.
-        It is possible that there is no Wampa (i.e. if query_room is an empty tuple)
-        if no stench has been percieved yet."""
+        """TODO: Return True if the room could be a pit given KB, False otherwise."""
+        if room == tuple():  # It is possible that there are no pits (i.e. if room is an empty tuple)
+            return not self.KB.breeze  # if no breeze has been percieved yet
+        ...
         pass
 
     def room_could_be_wampa(self, room):
-        """TODO: Return True if the room could be a wampa given KB, False otherwise.
-        It is possible that there is no Wampa (i.e. if query_room is an empty tuple)
-        if no stench has been percieved yet."""
+        """TODO: Return True if the room could be a wampa given KB, False otherwise."""
+        if room == tuple():  # It is possible that there is no Wampa (i.e. if room is an empty tuple)
+            return not self.KB.stench  # if no stench has been percieved yet
+        ...
         pass
 
     def enumerate_possible_worlds(self):
         """TODO: Return all possible combinations of pit and wampa locations consistent with the rules.
-        First, subtract the set of rooms that cannot have a pit or wampa from the set of possible rooms.
-        Then use itertools.combinations to return the set of possible worlds, where
-        possible_worlds is a tuple (pit_rooms, wampa_room), pit_rooms is a set of tuples of possible pit rooms
+        First, subtract the set of rooms that cannot have a pit or wampa from the set of possible 
+        rooms to yield the set of rooms that could have a pit or wampa.
+
+        Then use itertools.combinations to return the set of possible worlds, where possible_worlds
+        is a set of tuples (pit_rooms, wampa_room), pit_rooms is a tuple of possible pit rooms
         and wampa_room is a tuple representing a possible wampa room.
-        You may find the utils.flatten(tup) method useful here."""
+
+        You may find the utils.flatten(tup) method useful here for flattening wampa_room into a tuple."""
+        ...
         pass
 
     def find_model_of_KB(self, possible_worlds):
-        """TODO: Return the set of all possible worlds consistent with KB.
-        worlds is a tuple (pit_rooms, wampa_room), pit_rooms is a set of tuples of possible pit rooms
+        """TODO: Return the subset of all possible worlds consistent with KB.
+        possible_worlds is a tuple (pit_rooms, wampa_room),
+        pit_rooms is a set of tuples of possible pit rooms,
         and wampa_room is a tuple representing a possible wampa room."""
+        ...
         pass
 
-    def query_set_of_worlds(self, query_feature, room, worlds):
-        """TODO: Where query_feature can be "pit" or "wampa", filter the set of worlds 
-        to those in which contain the query feature in the given room."""
+    def query_set_of_worlds(self, query, room, worlds):
+        """Where query can be "pit_in_room", "wampa_in_room", "no_pit_in_room" or "no_wampa_in_room",
+        filter the set of worlds to those which contain the query in the given room."""
+        ...
         pass
 
     def infer_wall_locations(self):
@@ -112,10 +126,10 @@ class Agent:
         following the backward-chaining resolution algorithm:
         1. Enumerate possible worlds
         2. Find the model of the KB, i.e. the subset of possible worlds consistent with the KB
-        3. For each adjacent room, find the model of the query (i.e. "pit in adj_room?")
-        4. If the set of possible worlds consistent with KB and query is non-empty and is a subset 
-        of possible worlds consistent with query, the query is entailed by the KB
-        5. Update KB.pits, KB.wampa, and KB.safe_rooms accordingly
+        3. For each adjacent room and each query, find the model of the query (i.e. "pit in adj_room?", "no wampa in adj_room?", etc.)
+        4. If the model of the KB is a subset of the model of the query, the query is entailed by the KB
+        5. Update KB.pits, KB.wampa, and KB.safe_rooms based on any new information inferred.
         """
+        ...
         pass
         
