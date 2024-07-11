@@ -32,11 +32,11 @@ Contains R2D2's constructor including initial knowledge base class, KB. Familiar
 `record_percepts(self, sensed_percepts, current_location):`
 - Update the percepts in agent's KB with the percepts sensed in the current location, and update safe_rooms, visited_rooms, and possible_rooms accordingly.
 
-`room_could_be_pit(self, query_room)`
-- Given the rules of the game, return True if the query_room could be a pit given KB, False otherwise.
+`room_could_be_pit(self, room)`
+- Given the rules of the game, return True if the room could be a pit given KB, False otherwise.
 
-`room_could_be_wampa(self, query_room)`
-- Given the rules of the game, return True if the query_room could be a wampa given KB, False otherwise.
+`room_could_be_wampa(self, room)`
+- Given the rules of the game, return True if the room could be a wampa given KB, False otherwise.
 
 `enumerate_possible_worlds(self)`
 - Return all possible combinations of pit and wampa locations consistent with the rules.
