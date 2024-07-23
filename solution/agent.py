@@ -109,7 +109,7 @@ class Agent:
 
     def find_model_of_KB(self, possible_worlds):
         """Return the subset of all possible worlds consistent with KB.
-        possible_worlds is a tuple (pit_rooms, wampa_room),
+        possible_worlds is a set of tuples (pit_rooms, wampa_room),
         pit_rooms is a set of tuples of possible pit rooms,
         and wampa_room is a tuple representing a possible wampa room."""
 
