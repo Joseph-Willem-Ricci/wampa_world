@@ -7,11 +7,11 @@ class KB:
         self.safe_rooms = {agent.loc}  # set of rooms (x, y) that are known to be safe
         self.visited_rooms = {agent.loc}  # set of rooms (x, y) that have been visited
         self.possible_rooms = {agent.loc}  # set of rooms (x, y) that might be possible to visit
-        self.stench = set()  # set of rooms (x, y) where stench has been percieved
-        self.breeze = set()  # set of rooms (x, y) where breeze has been percieved
-        self.bump = dict()  # loc: direction where bump has been percieved
-        self.gasp = False  # True if gasp has been percieved
-        self.scream = False  # True if scream has been percieved
+        self.stench = set()  # set of rooms (x, y) where stench has been perceived
+        self.breeze = set()  # set of rooms (x, y) where breeze has been perceived
+        self.bump = dict()  # loc: direction where bump has been perceived
+        self.gasp = False  # True if gasp has been perceived
+        self.scream = False  # True if scream has been perceived
         self.walls = set()  # set of rooms (x, y) that are known to be walls (if bump in (0, 0), left, then (-1, 0) is a wall)
         self.pits = set()  # set of rooms (x, y) that are known to be pits
         self.wampa = None  # room (x, y) that is known to be the Wampa
@@ -71,7 +71,7 @@ class Agent:
     def room_could_be_pit(self, room):
         """Return True if the room could be a pit given KB, False otherwise."""
         if room == tuple():  # It is possible that there are no pits (i.e. if room is an empty tuple)
-            return not self.KB.breeze  # if no breeze has been percieved yet
+            return not self.KB.breeze  # if no breeze has been perceived yet
         
         return all(room in self.KB.breeze or room not in self.KB.visited_rooms
                    for room in self.adjacent_rooms(room))
@@ -79,7 +79,7 @@ class Agent:
     def room_could_be_wampa(self, room):
         """Return True if the room could be a wampa given KB, False otherwise."""
         if room == tuple():  # It is possible that there is no Wampa (i.e. if room is an empty tuple)
-            return not self.KB.stench  # if no stench has been percieved yet
+            return not self.KB.stench  # if no stench has been perceived yet
 
         return all(room in self.KB.stench or room not in self.KB.visited_rooms
                    for room in self.adjacent_rooms(room))
