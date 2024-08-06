@@ -6,17 +6,17 @@ def flatten(tup):
     return tup
 
 def get_direction(degrees):
-    amount = float(degrees) / 360
-    fraction, _ = modf(amount)
-    match abs(fraction):
+    fraction = (degrees % 360) / 360
+    orientation = None
+    match fraction:
         case 0:
-            orientation= "up"
-        case .25:
-            orientation= "right"
-        case .5:
-            orientation= "down"
-        case .75:
-            orientation= "left"
+            orientation = "up"
+        case 0.25:
+            orientation = "right"
+        case 0.5:
+            orientation = "down"
+        case 0.75:
+            orientation = "left"
     return orientation
 
 def is_facing_wampa(agent):
