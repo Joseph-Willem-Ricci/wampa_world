@@ -6,7 +6,7 @@ Wampa World logic-based agent homework was developed by Joseph Willem Ricci upon
 
 R2D2 begins at the bottom-left location (0, 0) and must navigate the rectangular grid of unknown size. R2 can navigate left, right or forward. R2D2's goal is to rescue Luke by navigating to the room that contains Luke, "grab"ing him, and navigating back to (0, 0) to "climb" out of the cave.
 
-Along the way, R2D2 must avoid pits which he can fall into, and must avoid the Wampa, which can destroy him. In any adjacent room to a pit, R2D2 can percieve a "breeze". In any adjacent room to a Wampa, R2D2 can percieve a "stench". There can be [0, m*n - 2] pits, and there can be [0, 1] Wampas.
+Along the way, R2D2 must avoid pits which he can fall into, and must avoid the Wampa, which can destroy him. In any adjacent room to a pit, R2D2 can percieve a "breeze". In any adjacent room to a Wampa, R2D2 can percieve a "stench". There can be [0, m*n - 2] pits, and there can be [0, 1] Wampas. Each room can have 0 or 1 features from ['luke', 'pit', 'wall', 'wampa'].
 
 R2D2 is also carrying a blaster with one shot, and can "shoot" the Wampa with a shot in its direction. If the Wampa is killed by the shot, R2D2 percieves a "scream".
 
