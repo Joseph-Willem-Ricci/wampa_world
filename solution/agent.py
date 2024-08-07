@@ -131,16 +131,17 @@ class Agent:
                 all(self.pit_room_is_consistent_with_KB(room) for room in p)}
 
 
-    def query_set_of_worlds(self, query, room, worlds):
+    def find_model_of_query(self, query, room, possible_worlds):
         """Where query can be "pit_in_room", "wampa_in_room", "no_pit_in_room" or "no_wampa_in_room",
-        filter the set of worlds to those which contain the query in the given room."""
+        filter the set of worlds according to the query and room."""
         query_to_filter = {
             "pit_in_room": lambda world: room in world[0],
             "wampa_in_room": lambda world: room == world[1],
             "no_pit_in_room": lambda world: room not in world[0],
             "no_wampa_in_room": lambda world: room != world[1]
         }
-        return {world for world in worlds if query_to_filter[query](world)}
+        filter_function = query_to_filter.get(query)
+        return set(filter(filter_function, possible_worlds))
 
     def infer_wall_locations(self):
         """If a bump is perceived, infer wall locations along the entire known length of the room."""
@@ -202,7 +203,7 @@ class Agent:
         # for each query in each adj. room, find the model of the query and check if query is entailed by KB
         for adj_room in self.adjacent_rooms(self.loc):
             for query, inferences in queries_to_inferences.items():
-                model_of_query = self.query_set_of_worlds(query, adj_room, possible_worlds)
+                model_of_query = self.find_model_of_query(query, adj_room, possible_worlds)
                 if model_of_KB.issubset(model_of_query):
                     inferences.add(adj_room)
 

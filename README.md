@@ -44,8 +44,8 @@ Contains R2D2's constructor including initial knowledge base class, KB. Familiar
 `find_model_of_KB(self, possible_worlds)`
 - Return the subset of all possible worlds consistent with KB. possible_worlds is a set of tuples (pit_rooms, wampa_room), pit_rooms is a set of tuples of possible pit rooms, and wampa_room is a tuple representing a possible wampa room. A world is consistent with the KB if wampa_room is consistent and all pit rooms are consistent with the KB."
 
-`query_set_of_worlds(self, query_feature, room, worlds)`
-- Where query can be "pit_in_room", "wampa_in_room", "no_pit_in_room" or "no_wampa_in_room", filter the set of worlds to those which contain the query in the given room.
+`find_model_of_query(self, query, room, possible_worlds)`
+- Where query can be "pit_in_room", "wampa_in_room", "no_pit_in_room" or "no_wampa_in_room", filter the set of worlds according to the query and room.
 
 `inference_algorithm(self):`
 - If there is no breeze or stench, infer that the adjacent rooms are safe. Infer wall locations given bump percept, Luke's location given gasp percept, and whether the Wampa is alive given scream percept.

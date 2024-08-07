@@ -105,9 +105,9 @@ class Agent:
         ...
         pass
 
-    def query_set_of_worlds(self, query, room, worlds):
-        """Where query can be "pit_in_room", "wampa_in_room", "no_pit_in_room" or "no_wampa_in_room",
-        filter the set of worlds to those which contain the query in the given room."""
+    def find_model_of_query(self, query, room, possible_worlds):
+        """TODO: Where query can be "pit_in_room", "wampa_in_room", "no_pit_in_room" or "no_wampa_in_room",
+        filter the set of worlds according to the query and room."""
         ...
         pass
 
