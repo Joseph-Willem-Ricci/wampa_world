@@ -66,22 +66,6 @@ class Agent:
         
         self.KB.visited_rooms.add(self.loc)
         self.KB.all_rooms.update(self.adjacent_rooms(self.loc))
-    
-    def room_could_be_pit(self, room):
-        """Return True if the room could be a pit given KB, False otherwise."""
-        if room == tuple():  # It is possible that there are no pits (i.e. if room is an empty tuple)
-            return not self.KB.breeze  # if no breeze has been perceived yet
-        
-        return all(room in self.KB.breeze or room not in self.KB.visited_rooms
-                   for room in self.adjacent_rooms(room))
-    
-    def room_could_be_wampa(self, room):
-        """Return True if the room could be a wampa given KB, False otherwise."""
-        if room == tuple():  # It is possible that there is no Wampa (i.e. if room is an empty tuple)
-            return not self.KB.stench  # if no stench has been perceived yet
-
-        return all(room in self.KB.stench or room not in self.KB.visited_rooms
-                   for room in self.adjacent_rooms(room))
 
     def enumerate_possible_worlds(self):
         """Return all possible combinations of pit and wampa locations consistent with the rules.
@@ -105,15 +89,38 @@ class Agent:
             for wampa_room in combinations(rooms_could_be_pit_or_wampa, num_wampas)
             if wampa_room not in pit_rooms or wampa_room == ()
         )
+    
+    def pit_room_is_consistent_with_KB(self, pit_room):
+        """Return True if the pit_room could be a pit given KB, False otherwise.
+        A room could be a pit if all adjacent rooms that have been visited have breeze.
+        This will be used to find the model of the KB."""
+        if pit_room == tuple():  # It is possible that there are no pits (i.e. if pit_room is an empty tuple)
+            return not self.KB.breeze  # if no breeze has been perceived yet
+        
+        return all(room in self.KB.breeze or room not in self.KB.visited_rooms
+                   for room in self.adjacent_rooms(pit_room))
+    
+    def wampa_room_is_consistent_with_KB(self, wampa_room):
+        """Return True if the room could be a wampa given KB, False otherwise.
+        A room could be a wampa if all adjacent rooms that have been visited have stench.
+        This will be used to find the model of the KB."""
+        if wampa_room == tuple():  # It is possible that there is no Wampa (i.e. if room is an empty tuple)
+            return not self.KB.stench  # if no stench has been perceived yet
+
+        return all(room in self.KB.stench or room not in self.KB.visited_rooms
+                   for room in self.adjacent_rooms(wampa_room))
 
     def find_model_of_KB(self, possible_worlds):
         """Return the subset of all possible worlds consistent with KB.
         possible_worlds is a set of tuples (pit_rooms, wampa_room),
         pit_rooms is a set of tuples of possible pit rooms,
-        and wampa_room is a tuple representing a possible wampa room."""
+        and wampa_room is a tuple representing a possible wampa room.
+        A world is consistent with the KB if the wampa location is consistent and
+        all pit rooms are consistent with the KB."""
 
         return {(p, w) for p, w in possible_worlds if
-                self.room_could_be_wampa(w) and all(self.room_could_be_pit(room) for room in p)}
+                self.wampa_room_is_consistent_with_KB(w) and 
+                all(self.pit_room_is_consistent_with_KB(room) for room in p)}
 
 
     def query_set_of_worlds(self, query, room, worlds):

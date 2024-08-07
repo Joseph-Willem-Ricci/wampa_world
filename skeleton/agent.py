@@ -55,21 +55,6 @@ class Agent:
         present_percepts = set(p for p in sensed_percepts if p)
         ...
         pass
-        
-
-    def room_could_be_pit(self, room):
-        """TODO: Return True if the room could be a pit given KB, False otherwise."""
-        if room == tuple():  # It is possible that there are no pits (i.e. if room is an empty tuple)
-            return not self.KB.breeze  # if no breeze has been perceived yet
-        ...
-        pass
-
-    def room_could_be_wampa(self, room):
-        """TODO: Return True if the room could be a wampa given KB, False otherwise."""
-        if room == tuple():  # It is possible that there is no Wampa (i.e. if room is an empty tuple)
-            return not self.KB.stench  # if no stench has been perceived yet
-        ...
-        pass
 
     def enumerate_possible_worlds(self):
         """TODO: Return all possible combinations of pit and wampa locations consistent with the rules.
@@ -84,11 +69,31 @@ class Agent:
         ...
         pass
 
+    def pit_room_is_consistent_with_KB(self, pit_room):
+        """TODO: Return True if the room could be a pit given KB, False otherwise.
+        A room could be a pit if all adjacent rooms that have been visited have breeze.
+        This will be used to find the model of the KB."""
+        if pit_room == tuple():  # It is possible that there are no pits (i.e. if pit_room is an empty tuple)
+            return not self.KB.breeze  # if no breeze has been perceived yet
+        ...
+        pass
+
+    def wampa_room_is_consistent_with_KB(self, wampa_room):
+        """TODO: Return True if the room could be a wampa given KB, False otherwise.
+        A room could be a wampa if all adjacent rooms that have been visited have stench.
+        This will be used to find the model of the KB."""
+        if wampa_room == tuple():  # It is possible that there is no Wampa (i.e. if wampa_room is an empty tuple)
+            return not self.KB.stench  # if no stench has been perceived yet
+        ...
+        pass
+
     def find_model_of_KB(self, possible_worlds):
         """TODO: Return the subset of all possible worlds consistent with KB.
         possible_worlds is a set of tuples (pit_rooms, wampa_room),
         pit_rooms is a set of tuples of possible pit rooms,
-        and wampa_room is a tuple representing a possible wampa room."""
+        and wampa_room is a tuple representing a possible wampa room.
+        A world is consistent with the KB if wampa_room is consistent and
+        all pit rooms are consistent with the KB."""
         ...
         pass
 

@@ -32,17 +32,17 @@ Contains R2D2's constructor including initial knowledge base class, KB. Familiar
 `record_percepts(self, sensed_percepts, current_location):`
 - Update the percepts in agent's KB with the percepts sensed in the current location, and update visited_rooms and all_rooms accordingly.
 
-`room_could_be_pit(self, room)`
-- Given the rules of the game, return True if the room could be a pit given KB, False otherwise.
-
-`room_could_be_wampa(self, room)`
-- Given the rules of the game, return True if the room could be a wampa given KB, False otherwise.
-
 `enumerate_possible_worlds(self)`
 - Return all possible combinations of pit and wampa locations consistent with the rules.
 
+`pit_room_is_consistent_with_KB(self, room)`
+- Return True if the room could be a pit given KB, False otherwise. A room could be a pit if all adjacent rooms that have been visited have breeze. This will be used to find the model of the KB.
+
+`wampa_room_is_consistent_with_KB(self, room)`
+- Return True if the room could be a wampa given KB, False otherwise. A room could be a wampa if all adjacent rooms that have been visited have stench. This will be used to find the model of the KB.
+
 `find_model_of_KB(self, possible_worlds)`
-- Return the subset of all possible worlds consistent with KB.
+- Return the subset of all possible worlds consistent with KB. possible_worlds is a set of tuples (pit_rooms, wampa_room), pit_rooms is a set of tuples of possible pit rooms, and wampa_room is a tuple representing a possible wampa room. A world is consistent with the KB if wampa_room is consistent and all pit rooms are consistent with the KB."
 
 `query_set_of_worlds(self, query_feature, room, worlds)`
 - Where query can be "pit_in_room", "wampa_in_room", "no_pit_in_room" or "no_wampa_in_room", filter the set of worlds to those which contain the query in the given room.
