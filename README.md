@@ -27,7 +27,7 @@ Contains R2D2's constructor including initial knowledge base class, KB. Familiar
 ### TODOs:
 
 `adjacent_rooms(self, room):`
-- Returns a set of tuples representing all possible adjacent rooms to 'room' that aren't known to be walls.
+- Returns a set of tuples representing all possible adjacent rooms to 'room'.
 
 `record_percepts(self, sensed_percepts, current_location):`
 - Update the percepts in agent's KB with the percepts sensed in the current location, and update safe_rooms, visited_rooms, and possible_rooms accordingly.

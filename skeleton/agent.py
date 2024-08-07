@@ -44,7 +44,7 @@ class Agent:
 
     def adjacent_rooms(self, room):
         """TODO: Returns a set of tuples representing all possible adjacent rooms to 'room'
-        that aren't known to be walls."""
+        Use this function to update KB.possible_rooms."""
         ...
         pass
 

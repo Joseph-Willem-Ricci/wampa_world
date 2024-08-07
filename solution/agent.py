@@ -44,10 +44,10 @@ class Agent:
 
     def adjacent_rooms(self, room):
         """Returns a set of tuples representing all possible adjacent rooms to 'room'
-        that aren't known to be walls."""
+        Use this function to update KB.possible_rooms."""
         x, y = room
         deltas = [(0, 1), (0, -1), (1, 0), (-1, 0)]
-        return ((x+dx, y+dy) for dx, dy in deltas if (x+dx, y+dy) not in self.KB.walls)
+        return ((x+dx, y+dy) for dx, dy in deltas if (x+dx, y+dy))
 
     def record_percepts(self, sensed_percepts, current_location):
         """Update the percepts in agent's KB with the percepts sensed in the current location, 
