@@ -57,15 +57,20 @@ class Agent:
         pass
 
     def enumerate_possible_worlds(self):
-        """TODO: Return all possible combinations of pit and wampa locations consistent with the rules.
-        First, subtract the set of rooms that cannot have a pit or wampa from the set of possible 
-        rooms to yield the set of rooms that could have a pit or wampa.
+        """TODO: Return the set of all possible worlds, where a possible world is a tuple of (pit_rooms, wampa_room),
+        pit_rooms is a tuple of tuples representing possible pit rooms, and 
+        wampa_room is a tuple representing a possible wampa room.
 
-        Then use itertools.combinations to return the set of possible worlds, where possible_worlds
-        is a set of tuples (pit_rooms, wampa_room), pit_rooms is a tuple of possible pit rooms
-        and wampa_room is a tuple representing a possible wampa room.
+        Since the goal is to combinatorially enumerate all the possible worlds (pit and wampa locations)
+        over the set of rooms that could potentially have a pit or a wampa, we first want to find that set.
+        To do that, subtract the set of rooms that you know cannot have a pit or wampa from the set of all rooms.
+        For example, you know that a room with a wall cannot have a pit or wampa.
 
-        You may find the utils.flatten(tup) method useful here for flattening wampa_room into a tuple."""
+        Then use itertools.combinations to return the set of possible worlds, or all combinations of
+        possible pit and wampa locations.
+
+        You may find the utils.flatten(tup) method useful here for flattening
+        wampa_room from a tuple of tuples into a tuple."""
         ...
         pass
 

@@ -68,26 +68,31 @@ class Agent:
         self.KB.all_rooms.update(self.adjacent_rooms(self.loc))
 
     def enumerate_possible_worlds(self):
-        """Return all possible combinations of pit and wampa locations consistent with the rules.
-        First, subtract the set of rooms that cannot have a pit or wampa from the set of possible 
-        rooms to yield the set of rooms that could have a pit or wampa.
+        """Return the set of all possible worlds, where a possible world is a tuple of (pit_rooms, wampa_room),
+        pit_rooms is a tuple of tuples representing possible pit rooms, and 
+        wampa_room is a tuple representing a possible wampa room.
 
-        Then use itertools.combinations to return the set of possible worlds, where possible_worlds
-        is a set of tuples (pit_rooms, wampa_room), pit_rooms is a tuple of possible pit rooms
-        and wampa_room is a tuple representing a possible wampa room.
+        Since the goal is to combinatorially enumerate all the possible worlds (pit and wampa locations)
+        over the set of rooms that could potentially have a pit or a wampa, we first want to find that set.
+        To do that, subtract the set of rooms that you know cannot have a pit or wampa from the set of all rooms.
+        For example, you know that a room with a wall cannot have a pit or wampa.
 
-        You may find the utils.flatten(tup) method useful here for flattening wampa_room into a tuple."""
+        Then use itertools.combinations to return the set of possible worlds, or all combinations of
+        possible pit and wampa locations.
+
+        You may find the utils.flatten(tup) method useful here for flattening
+        wampa_room from a tuple of tuples into a tuple."""
 
         rooms_cannot_be_pit_or_wampa = self.KB.walls | self.KB.safe_rooms
         rooms_could_be_pit_or_wampa = self.KB.all_rooms - rooms_cannot_be_pit_or_wampa
 
-        return set(
-            (pit_rooms, flatten(wampa_room))
-            for num_pits in range(len(rooms_could_be_pit_or_wampa) + 1)
-            for num_wampas in range(2)
-            for pit_rooms in combinations(rooms_could_be_pit_or_wampa, num_pits)
+        return set(                             # if n = |rooms_could_be_pit_or_wampa|
+            (pit_rooms, flatten(wampa_room))    # return all possible worlds
+            for num_pits in range(len(rooms_could_be_pit_or_wampa) + 1)  # with 0 to n pits
+            for num_wampas in range(2)          # with  0 or 1 wampas
+            for pit_rooms in combinations(rooms_could_be_pit_or_wampa, num_pits)  # over all possible rooms
             for wampa_room in combinations(rooms_could_be_pit_or_wampa, num_wampas)
-            if wampa_room not in pit_rooms or wampa_room == ()
+            if wampa_room not in pit_rooms or wampa_room == ()  # if wampa_room != pit_room or wampa_room is empty
         )
     
     def pit_room_is_consistent_with_KB(self, pit_room):
