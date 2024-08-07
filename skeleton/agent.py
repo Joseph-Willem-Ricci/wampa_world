@@ -4,9 +4,9 @@ from itertools import combinations
 # KNOWLEDGE BASE
 class KB:
     def __init__(self, agent):
+        self.all_rooms = {agent.loc}  # set of all rooms (x, y) that are known to exist
         self.safe_rooms = {agent.loc}  # set of rooms (x, y) that are known to be safe
         self.visited_rooms = {agent.loc}  # set of rooms (x, y) that have been visited
-        self.possible_rooms = {agent.loc}  # set of rooms (x, y) that might be possible to visit
         self.stench = set()  # set of rooms (x, y) where stench has been perceived
         self.breeze = set()  # set of rooms (x, y) where breeze has been perceived
         self.bump = dict()  # loc: direction where bump has been perceived
@@ -44,13 +44,13 @@ class Agent:
 
     def adjacent_rooms(self, room):
         """TODO: Returns a set of tuples representing all possible adjacent rooms to 'room'
-        Use this function to update KB.possible_rooms."""
+        Use this function to update KB.all_rooms."""
         ...
         pass
 
     def record_percepts(self, sensed_percepts, current_location):
         """TODO: Update the percepts in agent's KB with the percepts sensed in the current 
-        location, and update safe_rooms, visited_rooms, and possible_rooms accordingly."""
+        location and update visited_rooms and all_rooms accordingly."""
         self.loc = current_location
         present_percepts = set(p for p in sensed_percepts if p)
         ...
@@ -100,10 +100,10 @@ class Agent:
 
     def infer_wall_locations(self):
         """If a bump is perceived, infer wall locations along the entire known length of the room."""
-        min_x = min(self.KB.possible_rooms, key=lambda x: x[0])[0]
-        max_x = max(self.KB.possible_rooms, key=lambda x: x[0])[0]
-        min_y = min(self.KB.possible_rooms, key=lambda x: x[1])[1]
-        max_y = max(self.KB.possible_rooms, key=lambda x: x[1])[1]
+        min_x = min(self.KB.all_rooms, key=lambda x: x[0])[0]
+        max_x = max(self.KB.all_rooms, key=lambda x: x[0])[0]
+        min_y = min(self.KB.all_rooms, key=lambda x: x[1])[1]
+        max_y = max(self.KB.all_rooms, key=lambda x: x[1])[1]
         for room, orientation in self.KB.bump.items():
             if orientation == "up":
                 for x in range(min_x, max_x + 1, 1):

@@ -4,9 +4,9 @@ from itertools import combinations
 # KNOWLEDGE BASE
 class KB:
     def __init__(self, agent):
+        self.all_rooms = {agent.loc}  # set of all rooms (x, y) that are known to exist
         self.safe_rooms = {agent.loc}  # set of rooms (x, y) that are known to be safe
         self.visited_rooms = {agent.loc}  # set of rooms (x, y) that have been visited
-        self.possible_rooms = {agent.loc}  # set of rooms (x, y) that might be possible to visit
         self.stench = set()  # set of rooms (x, y) where stench has been perceived
         self.breeze = set()  # set of rooms (x, y) where breeze has been perceived
         self.bump = dict()  # loc: direction where bump has been perceived
@@ -44,14 +44,14 @@ class Agent:
 
     def adjacent_rooms(self, room):
         """Returns a set of tuples representing all possible adjacent rooms to 'room'
-        Use this function to update KB.possible_rooms."""
+        Use this function to update KB.all_rooms."""
         x, y = room
         deltas = [(0, 1), (0, -1), (1, 0), (-1, 0)]
         return ((x+dx, y+dy) for dx, dy in deltas if (x+dx, y+dy))
 
     def record_percepts(self, sensed_percepts, current_location):
         """Update the percepts in agent's KB with the percepts sensed in the current location, 
-        and update safe_rooms, visited_rooms, and possible_rooms accordingly."""
+        and update visited_rooms and all_rooms accordingly."""
         self.loc = current_location
         present_percepts = set(p for p in sensed_percepts if p)
         percept_to_process = {
@@ -64,9 +64,8 @@ class Agent:
         for percept in present_percepts:
             percept_to_process[percept]()
         
-        self.KB.safe_rooms.add(self.loc)
         self.KB.visited_rooms.add(self.loc)
-        self.KB.possible_rooms.update(self.adjacent_rooms(self.loc))
+        self.KB.all_rooms.update(self.adjacent_rooms(self.loc))
     
     def room_could_be_pit(self, room):
         """Return True if the room could be a pit given KB, False otherwise."""
@@ -96,7 +95,7 @@ class Agent:
         You may find the utils.flatten(tup) method useful here for flattening wampa_room into a tuple."""
 
         rooms_cannot_be_pit_or_wampa = self.KB.walls | self.KB.safe_rooms
-        rooms_could_be_pit_or_wampa = self.KB.possible_rooms - rooms_cannot_be_pit_or_wampa
+        rooms_could_be_pit_or_wampa = self.KB.all_rooms - rooms_cannot_be_pit_or_wampa
 
         return set(
             (pit_rooms, flatten(wampa_room))
@@ -130,10 +129,10 @@ class Agent:
 
     def infer_wall_locations(self):
         """If a bump is perceived, infer wall locations along the entire known length of the room."""
-        min_x = min(self.KB.possible_rooms, key=lambda x: x[0])[0]
-        max_x = max(self.KB.possible_rooms, key=lambda x: x[0])[0]
-        min_y = min(self.KB.possible_rooms, key=lambda x: x[1])[1]
-        max_y = max(self.KB.possible_rooms, key=lambda x: x[1])[1]
+        min_x = min(self.KB.all_rooms, key=lambda x: x[0])[0]
+        max_x = max(self.KB.all_rooms, key=lambda x: x[0])[0]
+        min_y = min(self.KB.all_rooms, key=lambda x: x[1])[1]
+        max_y = max(self.KB.all_rooms, key=lambda x: x[1])[1]
         for room, orientation in self.KB.bump.items():
             if orientation == "up":
                 for x in range(min_x, max_x + 1, 1):
