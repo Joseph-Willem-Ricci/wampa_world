@@ -14,7 +14,7 @@ class KB:
         self.scream = False  # True if scream has been perceived
         self.walls = set()  # set of rooms (x, y) that are known to be walls (if bump in (0, 0), left, then (-1, 0) is a wall)
         self.pits = set()  # set of rooms (x, y) that are known to be pits
-        self.wampa = None  # room (x, y) that is known to be the Wampa
+        self.wampa = set()  # room (x, y) that is known to be the Wampa
         self.luke = None  # room (x, y) that is known to be Luke
         
 
@@ -47,7 +47,7 @@ class Agent:
         Use this function to update KB.all_rooms."""
         x, y = room
         deltas = [(0, 1), (0, -1), (1, 0), (-1, 0)]
-        return ((x+dx, y+dy) for dx, dy in deltas if (x+dx, y+dy))
+        return {(x+dx, y+dy) for dx, dy in deltas if (x+dx, y+dy)}
 
     def record_percepts(self, sensed_percepts, current_location):
         """Update the percepts in agent's KB with the percepts sensed in the current location, 
@@ -164,21 +164,24 @@ class Agent:
                     self.KB.walls.add((room[0] + 1, y))
 
     def inference_algorithm(self):
-        """If there is no breeze or stench, infer that the adjacent rooms are safe.
-        Infer wall locations given bump percept, Luke's location given gasp percept,
-        and whether the Wampa is alive given scream percept.
-        Infer whether each adjacent room could be a pit or could be a Wampa by
+        """First, make some basic inferences:
+        1. If there is no breeze or stench in current location, infer that the adjacent rooms are safe.
+        2. Infer wall locations given bump percept.
+        3. Infer Luke's location given gasp percept.
+        4. Infer whether the Wampa is alive given scream percept.
+
+        Then, infer whether each adjacent room is safe, pit or wampa by
         following the backward-chaining resolution algorithm:
-        1. Enumerate possible worlds
-        2. Find the model of the KB, i.e. the subset of possible worlds consistent with the KB
-        3. For each adjacent room and each query, find the model of the query (i.e. "pit in adj_room?", "no wampa in adj_room?", etc.)
-        4. If the model of the KB is a subset of the model of the query, the query is entailed by the KB
-        5. Update KB.pits, KB.wampa, and KB.safe_rooms based on any new information inferred.
+        1. Enumerate possible worlds.
+        2. Find the model of the KB, i.e. the subset of possible worlds consistent with the KB.
+        3. For each adjacent room and each query, find the model of the query.
+        4. If the model of the KB is a subset of the model of the query, the query is entailed by the KB.
+        5. Update KB.pits, KB.wampa, and KB.safe_rooms based on any new entailed knowledge.
         """
 
         # infer that adjacent rooms are safe if there is no breeze or stench
         if self.loc not in self.KB.breeze | self.KB.stench:
-            self.KB.safe_rooms.update(set(self.adjacent_rooms(self.loc))) 
+            self.KB.safe_rooms.update(self.adjacent_rooms(self.loc))
 
         # make inferences based on bump, gasp and scream percepts
         self.infer_wall_locations()
@@ -193,8 +196,10 @@ class Agent:
         wampa_in_room = set()
         no_pit_in_room = set()
         no_wampa_in_room = set()
-        queries_to_inferences = {"pit_in_room": pit_in_room, "wampa_in_room": wampa_in_room,
-                   "no_pit_in_room": no_pit_in_room, "no_wampa_in_room": no_wampa_in_room}
+        queries_to_inferences = {"pit_in_room": pit_in_room,
+                                 "wampa_in_room": wampa_in_room,
+                                 "no_pit_in_room": no_pit_in_room,
+                                 "no_wampa_in_room": no_wampa_in_room}
 
         # enumerate possible worlds and find the model of the KB
         possible_worlds = self.enumerate_possible_worlds()

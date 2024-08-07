@@ -48,13 +48,18 @@ Contains R2D2's constructor including initial knowledge base class, KB. Familiar
 - Where query can be "pit_in_room", "wampa_in_room", "no_pit_in_room" or "no_wampa_in_room", filter the set of worlds according to the query and room.
 
 `inference_algorithm(self):`
-- If there is no breeze or stench, infer that the adjacent rooms are safe. Infer wall locations given bump percept, Luke's location given gasp percept, and whether the Wampa is alive given scream percept.
-- Infer whether each adjacent room could be a pit or could be a Wampa by following the backward-chaining resolution algorithm:
-1. Enumerate possible worlds
-2. Find the model of the KB, i.e. the subset of possible worlds consistent with the KB
-3. For each adjacent room and each query, find the model of the query (i.e. "pit in adj_room?", "no wampa in adj_room?", etc.)
-4. If the model of the KB is a subset of the model of the query, the query is entailed by the KB
-5. Update KB.pits, KB.wampa, and KB.safe_rooms based on any new information inferred.
+- First, make some basic inferences:
+1. If there is no breeze or stench in current location, infer that the adjacent rooms are safe.
+2. Infer wall locations given bump percept.
+3. Infer Luke's location given gasp percept.
+4. Infer whether the Wampa is alive given scream percept.
+
+- Then, infer whether each adjacent room is safe, pit or wampa by following the backward-chaining resolution algorithm:
+1. Enumerate possible worlds.
+2. Find the model of the KB, i.e. the subset of possible worlds consistent with the KB.
+3. For each adjacent room and each query, find the model of the query.
+4. If the model of the KB is a subset of the model of the query, the query is entailed by the KB.
+5. Update KB.pits, KB.wampa, and KB.safe_rooms based on any new entailed knowledge.
 
 ## scenarios.py
 
