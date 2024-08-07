@@ -81,7 +81,9 @@ class Agent:
         possible pit and wampa locations.
 
         You may find the utils.flatten(tup) method useful here for flattening
-        wampa_room from a tuple of tuples into a tuple."""
+        wampa_room from a tuple of tuples into a tuple.
+        
+        The output of this function will be queried later to find the model of the query."""
 
         rooms_cannot_be_pit_or_wampa = self.KB.walls | self.KB.safe_rooms
         rooms_could_be_pit_or_wampa = self.KB.all_rooms - rooms_cannot_be_pit_or_wampa
