@@ -168,7 +168,7 @@ class Agent:
         1. If there is no breeze or stench in current location, infer that the adjacent rooms are safe.
         2. Infer wall locations given bump percept.
         3. Infer Luke's location given gasp percept.
-        4. Infer whether the Wampa is alive given scream percept.
+        4. Infer whether the Wampa is alive given scream percept. Clear stench from the KB if Wampa is dead.
 
         Then, infer whether each adjacent room is safe, pit or wampa by
         following the backward-chaining resolution algorithm:
