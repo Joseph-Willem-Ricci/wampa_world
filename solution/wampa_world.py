@@ -53,7 +53,7 @@ class WampaWorld:
             for x in range(self.X)
         ]
 
-        # Set "gasp" percept at Luke's location
+        # set "gasp" percept at Luke's location
         self.grid[self.luke[0]][self.luke[1]][2] = "gasp"
         self.agent = Agent(self)
 

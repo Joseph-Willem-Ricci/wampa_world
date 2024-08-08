@@ -95,7 +95,7 @@ class Agent:
             for num_wampas in range(2)          # with  0 or 1 wampas
             for pit_rooms in combinations(rooms_could_be_pit_or_wampa, num_pits)  # over all possible rooms
             for wampa_room in combinations(rooms_could_be_pit_or_wampa, num_wampas)
-            if wampa_room not in pit_rooms or wampa_room == ()  # if wampa_room != pit_room or wampa_room is empty
+            if flatten(wampa_room) not in pit_rooms or wampa_room == ()  # if wampa_room != pit_room or wampa_room is empty
         )
     
     def pit_room_is_consistent_with_KB(self, pit_room):

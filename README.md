@@ -4,15 +4,15 @@ Wampa World logic-based agent homework was developed by Joseph Willem Ricci upon
 
 # Gameplay
 
-R2D2 begins at the bottom-left location (0, 0) and must navigate the rectangular grid of unknown size. To navigate the grid, R2 can turn 'left' or 'right', or move 'forward'. R2D2's goal is to rescue Luke by navigating to the room that contains Luke, "grab"ing him, and navigating back to (0, 0) to "climb" out of the cave.
+R2-D2 begins at the bottom-left location (0, 0) and must navigate the rectangular grid of unknown size. To navigate the grid, [he](https://www.google.com/search?q=r2d2+gender) can turn 'left' or 'right', or move 'forward'. R2-D2's goal is to rescue Luke by navigating to the room that contains Luke, "grab"ing him, and navigating back to (0, 0) to "climb" out of the cave.
 
-Along the way, R2D2 must avoid pits which he can fall into, and must avoid the Wampa, which can destroy him. In any adjacent room to a pit, R2D2 can perceive a "breeze". In any adjacent room to a Wampa, R2D2 can perceive a "stench". There can be [0, m*n - 2] pits, and there can be [0, 1] Wampas. Each room can have 0 or 1 features from ['luke', 'pit', 'wall', 'wampa'].
+Along the way, R2-D2 must avoid pits which he can fall into, and must avoid the Wampa, which can destroy him. In any adjacent room to a pit, R2-D2 can perceive a "breeze". In any adjacent room to a Wampa, R2-D2 can perceive a "stench". There can be [0, m*n - 2] pits, and there can be [0, 1] Wampas. Each room can have 0 or 1 features from ['luke', 'pit', 'wall', 'wampa'].
 
-R2D2 is also carrying a blaster with one shot and infinite range, and can "shoot" the Wampa with a shot in its direction. If the Wampa is killed by the shot, R2D2 perceives a "scream".
+R2-D2 is also carrying a blaster with one shot and infinite range, and can "shoot" the Wampa with a shot in its direction. If the Wampa is killed by the shot, R2-D2 perceives a "scream".
 
-A "gasp" from Luke can be perceived by R2D2 if they are both in the same room.
+A "gasp" from Luke can be perceived by R2-D2 if they are both in the same room.
 
-Finally, if R2D2 moves "forward" into a wall, R2D2 perceives a "bump". For this assignment, assume that R2 knows that the world is rectangular and that there are no internal walls.
+Finally, if R2-D2 moves "forward" into a wall, R2-D2 perceives a "bump". For this assignment, assume that R2 knows that the world is rectangular and that there are no internal walls.
 
 Percepts: `['stench', 'breeze', 'gasp', 'bump', 'scream']`, where at some location, R2's percepts might look like `[None, 'breeze', None, 'bump', None]`
 
@@ -22,18 +22,65 @@ Actions: `'left', 'right', 'forward', 'grab', 'climb', 'shoot'`
 
 ## agent.py
 
-Contains R2D2's constructor including initial knowledge base class, KB. Familiarize yourself with the knowledge base, as the agent class will be using it for logical inference.
+Contains R2-D2's constructor including initial knowledge base class, KB. Familiarize yourself with the knowledge base, as the agent class will be using it for logical inference.
 
 ### TODOs:
 
 `adjacent_rooms(self, room):`
 - Returns a set of tuples representing all adjacent rooms to 'room'.
 
+Input: `(2, 3)`
+
+Expected output: `{(1, 3), (3, 3), (2, 2), (2, 4)}`
+
 `record_percepts(self, sensed_percepts, current_location):`
 - Update the percepts in agent's KB with the percepts sensed in the current location, and update visited_rooms and all_rooms accordingly.
 
 `enumerate_possible_worlds(self)`
-- Return the set of all possible worlds, where a possible world is a tuple of (pit_rooms, wampa_room), pit_rooms is a tuple of tuples representing possible pit rooms, and wampa_room is a tuple representing a possible wampa room. Since the goal is to combinatorially enumerate all the possible worlds (pit and wampa locations) over the set of rooms that could potentially have a pit or a wampa, we first want to find that set. To do that, subtract the set of rooms that you know cannot have a pit or wampa from the set of all rooms. For example, you know that a room with a wall cannot have a pit or wampa. Then use itertools.combinations to return the set of possible worlds, or all combinations of possible pit and wampa locations. You may find the utils.flatten(tup) method useful here for flattenin wampa_room from a tuple of tuples into a tuple. The output of this function will be queried to find the model of the query, and will be check for consistency with the KB to find the model of the KB..
+- Return the set of all possible worlds, where a possible world is a tuple of (pit_rooms, wampa_room), pit_rooms is a tuple of tuples representing possible pit rooms, and wampa_room is a tuple representing a possible wampa room. Since the goal is to combinatorially enumerate all the possible worlds (pit and wampa locations) over the set of rooms that could potentially have a pit or a wampa, we first want to find that set. To do that, subtract the set of rooms that you know cannot have a pit or wampa from the set of all rooms. For example, you know that a room with a wall cannot have a pit or wampa. Then use itertools.combinations to return the set of possible worlds, or all combinations of possible pit and wampa locations. You may find the utils.flatten(tup) method useful here for flattenin wampa_room from a tuple of tuples into a tuple. The output of this function will be queried to find the model of the query, and will be check for consistency with the KB to find the model of the KB.
+
+From an initial position on S1:
+```
+. . . P
+W L P .
+. . . .
+^ . P .
+```
+Expected output: `{(), ()}` because all adjacent rooms are known to be safe.
+
+From the following position, resulting from a forward action:
+```
+. . . P
+W L P .
+^ . . .
+. . P .
+```
+Expected output:
+```
+{
+    ((), ()),
+    ((), (-1, 1)),
+    ((), (0, 2)),
+    ((), (1, 1)),
+    (((-1, 1),), ()),
+    (((-1, 1),), (0, 2)),
+    (((-1, 1),), (1, 1)),
+    (((-1, 1), (0, 2)), ()),
+    (((-1, 1), (0, 2)), (1, 1)),
+    (((-1, 1), (1, 1)), ()),
+    (((-1, 1), (1, 1)), (0, 2)),
+    (((-1, 1), (1, 1), (0, 2)), ()),
+    (((0, 2),), ()),
+    (((0, 2),), (-1, 1)),
+    (((0, 2),), (1, 1)),
+    (((1, 1),), ()),
+    (((1, 1),), (-1, 1)),
+    (((1, 1),), (0, 2)),
+    (((1, 1), (0, 2)), ()),
+    (((1, 1), (0, 2)), (-1, 1))
+}
+```
+which corresponds to every combination of pit locations and wampa location in the rooms that could potentially have a pit or wampa, (-1, 1), (0, 2), (1, 1). Note, this is not doing "model checking". This is simply enumerating all possible pit and wampa locations. This set will be used to check against our KB and to query with our queries.
 
 `pit_room_is_consistent_with_KB(self, room)`
 - Return True if the room could be a pit given KB, False otherwise. A room could be a pit if all adjacent rooms that have been visited have breeze. This will be used to find the model of the KB.
@@ -80,8 +127,8 @@ Contains the WampaWorld class which defines gameplay, the main gameplay loop, an
 ### TODOs:
 
 `all_safe_next_actions(w)`
-- Define R2D2's valid and safe next actions based on his current location and knowledge of the environment.
+- Define R2-D2's valid and safe next actions based on his current location and knowledge of the environment.
 
 
 `choose_next_action(w)`
-- Choose next action from all safe next actions. You may want to prioritize some actions based on current state. For example, if R2D2 knows Luke's location and is in the same room as Luke, you may want to prioritize 'grab' over all other actions. Similarly, if R2D2 has Luke, you may want to prioritize moving toward the exit. You can implement this as basically (randomly choosing between safe actions) or as sophisticated (optimizing exploration of unvisited states, finding shortest paths, etc.) as you like.
+- Choose next action from all safe next actions. You may want to prioritize some actions based on current state. For example, if R2-D2 knows Luke's location and is in the same room as Luke, you may want to prioritize 'grab' over all other actions. Similarly, if R2-D2 has Luke, you may want to prioritize moving toward the exit. You can implement this as basically (randomly choosing between safe actions) or as sophisticated (optimizing exploration of unvisited states, finding shortest paths, etc.) as you like.
