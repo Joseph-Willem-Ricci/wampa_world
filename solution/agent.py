@@ -176,7 +176,7 @@ class Agent:
         2. Find the model of the KB, i.e. the subset of possible worlds consistent with the KB.
         3. For each adjacent room and each query, find the model of the query.
         4. If the model of the KB is a subset of the model of the query, the query is entailed by the KB.
-        5. Update KB.pits, KB.wampa, and KB.safe_rooms based on any new entailed knowledge.
+        5. Update KB.pits, KB.wampa, and KB.safe_rooms based on any newly derived knowledge.
         """
 
         # infer that adjacent rooms are safe if there is no breeze or stench

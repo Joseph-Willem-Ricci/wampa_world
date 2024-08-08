@@ -130,7 +130,7 @@ class WampaWorld:
 
 # DEFINE R2D2's POSSIBLE ACTIONS
 def all_safe_next_actions(w):
-    """Define R2D2's possible safe actions based on the current state of the world."""
+    """Define R2D2's valid and safe next actions based on his current location and knowledge of the environment."""
     actions = ['left', 'right']
     x, y = w.agent.loc
     dx, dy = w.agent.orientation_to_delta[get_direction(w.agent.degrees)]
@@ -147,7 +147,9 @@ def all_safe_next_actions(w):
     return actions
 
 def choose_next_action(w):
-    """Choose next action from all safe next actions. You can prioritize some based on state."""
+    """Choose next action from all safe next actions. You can prioritize some based on state.
+    For example, if R2D2 knows Luke's location and is in the same room as Luke,
+    you may want to prioritize 'grab' over all other actions."""
     actions = all_safe_next_actions(w)
     if 'climb' in actions:
         return 'climb'

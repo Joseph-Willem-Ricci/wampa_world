@@ -8,7 +8,7 @@ R2D2 begins at the bottom-left location (0, 0) and must navigate the rectangular
 
 Along the way, R2D2 must avoid pits which he can fall into, and must avoid the Wampa, which can destroy him. In any adjacent room to a pit, R2D2 can perceive a "breeze". In any adjacent room to a Wampa, R2D2 can perceive a "stench". There can be [0, m*n - 2] pits, and there can be [0, 1] Wampas. Each room can have 0 or 1 features from ['luke', 'pit', 'wall', 'wampa'].
 
-R2D2 is also carrying a blaster with one shot, and can "shoot" the Wampa with a shot in its direction. If the Wampa is killed by the shot, R2D2 perceives a "scream".
+R2D2 is also carrying a blaster with one shot and infinite range, and can "shoot" the Wampa with a shot in its direction. If the Wampa is killed by the shot, R2D2 perceives a "scream".
 
 A "gasp" from Luke can be perceived by R2D2 if they are both in the same room.
 
@@ -59,7 +59,7 @@ Contains R2D2's constructor including initial knowledge base class, KB. Familiar
 2. Find the model of the KB, i.e. the subset of possible worlds consistent with the KB.
 3. For each adjacent room and each query, find the model of the query.
 4. If the model of the KB is a subset of the model of the query, the query is entailed by the KB.
-5. Update KB.pits, KB.wampa, and KB.safe_rooms based on any new entailed knowledge.
+5. Update KB.pits, KB.wampa, and KB.safe_rooms based on any newly derived knowledge.
 
 ## scenarios.py
 
@@ -80,7 +80,8 @@ Contains the WampaWorld class which defines gameplay, the main gameplay loop, an
 ### TODOs:
 
 `all_safe_next_actions(w)`
-- Define R2D2's possible safe actions based on the current state of the world.
+- Define R2D2's valid and safe next actions based on his current location and knowledge of the environment.
+
 
 `choose_next_action(w)`
-- Choose next action from all safe next actions. You can prioritize some based on state.
+- Choose next action from all safe next actions. You can prioritize some based on state. For example, if R2D2 knows Luke's location and is in the same room as Luke, you may want to prioritize 'grab' over all other actions.
