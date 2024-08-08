@@ -84,4 +84,4 @@ Contains the WampaWorld class which defines gameplay, the main gameplay loop, an
 
 
 `choose_next_action(w)`
-- Choose next action from all safe next actions. You can prioritize some based on state. For example, if R2D2 knows Luke's location and is in the same room as Luke, you may want to prioritize 'grab' over all other actions.
+- Choose next action from all safe next actions. You may want to prioritize some actions based on current state. For example, if R2D2 knows Luke's location and is in the same room as Luke, you may want to prioritize 'grab' over all other actions. Similarly, if R2D2 has Luke, you may want to prioritize moving toward the exit. You can implement this as basically (randomly choosing between safe actions) or as sophisticated (optimizing exploration of unvisited states, finding shortest paths, etc.) as you like.
