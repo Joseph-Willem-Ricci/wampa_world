@@ -5,7 +5,8 @@ from scenarios import *
 from agent import Agent
 
 def fit_grid(grid, item):
-    """Used for calculating breeze and stench locations based on pit and wampa locations."""
+    """Used for calculating breeze and stench locationsbased on pit and wampa
+    locations."""
     grid_x, grid_y = grid
     x, y = item
     loc = []
@@ -89,7 +90,8 @@ class WampaWorld:
                     self.agent.loc = (x + 1, y)
                 else:
                     moved = False
-            if (self.get_location() == self.wampa and self.wampaAlive) or self.get_location() in self.pits:
+            if (self.get_location() == self.wampa and self.wampaAlive) or \
+                self.get_location() in self.pits:
                 self.agent.score -= 1000
                 print("R2-D2 has been crushed, -1000 points")
                 print("Your final score is: ", self.agent.score)
@@ -123,7 +125,7 @@ class WampaWorld:
                     self.wampa = None
                     for x in range(self.gridsize[0]):
                         for y in range(self.gridsize[1]):
-                            self.grid[x][y][4] = "scream"  # scream is heard everywhere
+                            self.grid[x][y][4] = "scream"  # scream everywhere
                             self.grid[x][y][0] = None  # stench is gone
                 print("Blaster bolt was shot")
             print("No more blaster bolts available")
@@ -150,7 +152,8 @@ class WampaWorld:
                 print("Climb requirements are not met yet")
 
         else:
-            raise ValueError("R2-D2 can only move Forward, turn Left, turn Right, Shoot, Grab, or Climb.")
+            raise ValueError("R2-D2 can only move Forward, turn Left, turn \
+                             Right, Shoot, Grab, or Climb.")
     
     def get_location(self):
         x, y = self.agent.loc
@@ -160,6 +163,7 @@ class WampaWorld:
         return self.agent.blaster
     
     def is_facing_wampa(self):
+        """You may wish to use this in all_safe_next_actions"""
         if self.agent.KB.wampa is None:
             return False
         x, y = self.agent.loc
@@ -172,12 +176,14 @@ class WampaWorld:
 
 # DEFINE R2D2's POSSIBLE ACTIONS
 def all_safe_next_actions(w):
-    """Define R2D2's valid and safe next actions based on his current location and knowledge of the environment."""
+    """Define R2D2's valid and safe next actions based on his current location
+    and knowledge of the environment."""
     actions = ['left', 'right']
     x, y = w.agent.loc
     dx, dy = w.agent.orientation_to_delta[get_direction(w.agent.degrees)]
     forward_room = (x+dx, y+dy)
-    if forward_room in w.agent.KB.safe_rooms and forward_room not in w.agent.KB.walls:
+    if forward_room in w.agent.KB.safe_rooms and \
+        forward_room not in w.agent.KB.walls:
         actions.append('forward')
     if w.agent.blaster and w.is_facing_wampa():
         actions.append('shoot')
@@ -189,12 +195,14 @@ def all_safe_next_actions(w):
     return actions
 
 def choose_next_action(w):
-    """Choose next action from all safe next actions. You may want to prioritize
-    some actions based on current state. For example, if R2D2 knows Luke's location
-    and is in the same room as Luke, you may want to prioritize 'grab' over all other actions.
-    Similarly, if R2D2 has Luke, you may want to prioritize moving toward the exit.
-    You can implement this as basically (randomly choosing between safe actions) or as
-    sophisticated (optimizing exploration of unvisited states, finding shortest paths, etc.) as you like."""
+    """Choose next action from all safe next actions. You may want to
+    prioritizesome actions based on current state. For example, if R2D2
+    knows Luke's location and is in the same room as Luke, you may want
+    to prioritize 'grab' over all other actions. Similarly, if R2D2 has
+    Luke, you may want to prioritize moving toward the exit. You can
+    implement this as basically (randomly choosing between safe actions)
+    or as sophisticated (optimizing exploration of unvisited states,
+    finding shortest paths, etc.) as you like."""
     actions = all_safe_next_actions(w)
     if 'climb' in actions:
         return 'climb'
@@ -205,7 +213,8 @@ def choose_next_action(w):
     x, y = w.agent.loc
     dx, dy = w.agent.orientation_to_delta[get_direction(w.agent.degrees)]
     forward_room = (x+dx, y+dy)
-    if 'forward' in actions and (forward_room not in w.agent.KB.visited_rooms or \
+    if 'forward' in actions and \
+        (forward_room not in w.agent.KB.visited_rooms or
          (w.agent.has_luke and (dx == -1 or dy == -1))):
         return 'forward'
     else:

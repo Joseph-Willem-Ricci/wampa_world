@@ -7,12 +7,13 @@ def visualize_world(world, r2d2_location, r2d2_direction):
     luke = world.luke
     safe_rooms = world.agent.KB.safe_rooms
     
-    direction_symbols = {'left': '<', 'right': '>', 'up': '^', 'down': 'v'}
+    dir_symbols = {'left': '<', 'right': '>', 'up': '^', 'down': 'v'}
     
     # Create an empty grid
     grid = [['.' for _ in range(grid_size[0])] for _ in range(grid_size[1])]
 
-    # Place safe rooms. Use this to visualize whether your inference algorithm is correctly inferring room safety.
+    # Place safe rooms. Use this to visualize whether your inference algorithm
+    # is correctly inferring room safety.
     # for room in safe_rooms:
     #     if 0 <= room[1] < grid_size[1] and 0 <= room[0] < grid_size[0]:
     #         grid[room[1]][room[0]] = 's'
@@ -30,7 +31,7 @@ def visualize_world(world, r2d2_location, r2d2_direction):
         grid[luke[1]][luke[0]] = 'L'
     
     # Place R2D2
-    grid[r2d2_location[1]][r2d2_location[0]] = direction_symbols[r2d2_direction]
+    grid[r2d2_location[1]][r2d2_location[0]] = dir_symbols[r2d2_direction]
 
     grid.reverse()
     print("\n" * SPACING)

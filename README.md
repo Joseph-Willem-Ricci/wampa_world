@@ -37,25 +37,25 @@ Expected output: `{(1, 3), (3, 3), (2, 2), (2, 4)}`
 - Update the percepts in agent's KB with the percepts sensed in the current location, and update visited_rooms and all_rooms accordingly.
 
 `enumerate_possible_worlds(self)`
-- Return the set of all possible worlds, where a possible world is a tuple of (pit_rooms, wampa_room), pit_rooms is a tuple of tuples representing possible pit rooms, and wampa_room is a tuple representing a possible wampa room. Since the goal is to combinatorially enumerate all the possible worlds (pit and wampa locations) over the set of rooms that could potentially have a pit or a wampa, we first want to find that set. To do that, subtract the set of rooms that you know cannot have a pit or wampa from the set of all rooms. For example, you know that a room with a wall cannot have a pit or wampa. Then use itertools.combinations to return the set of possible worlds, or all combinations of possible pit and wampa locations. You may find the utils.flatten(tup) method useful here for flattenin wampa_room from a tuple of tuples into a tuple. The output of this function will be queried to find the model of the query, and will be check for consistency with the KB to find the model of the KB.
+- Return the set of all possible worlds, where a possible world is a tuple of (pit_rooms, wampa_room), pit_rooms is a tuple of tuples representing possible pit rooms, and wampa_room is a tuple representing a possible wampa room. Since the goal is to combinatorially enumerate all the possible worlds (pit and wampa locations) over the set of rooms that could potentially have a pit or a wampa, we first want to find that set. To do that, subtract the set of rooms that you know cannot have a pit or wampa from the set of all rooms. For example, you know that a room with a wall cannot have a pit or wampa. Then use itertools.combinations to return the set of possible worlds, or all combinations of possible pit and wampa locations. You may find the utils.flatten(tup) method useful here for flattenin wampa_room from a tuple of tuples into a tuple. The output of this function will be queried to find the model of the query, and will be checked for consistency with the KB to find the model of the KB.
 
-From an initial position on S1:
+From step 0, the initial position on scenario S1:
 ```
 . . . P
 W L P .
 . . . .
 ^ . P .
 ```
-Expected output: `{(), ()}` because all adjacent rooms are known to be safe.
+Expected output `{(), ()}` because all rooms in `KB.all_rooms` are known to be safe.
 
-From the following position, resulting from a forward action:
+From step 1, the following position resulting from a forward action:
 ```
 . . . P
 W L P .
 ^ . . .
 . . P .
 ```
-Expected output:
+Expected output, `possible_worlds = `
 ```
 {
     ((), ()),
@@ -80,7 +80,7 @@ Expected output:
     (((1, 1), (0, 2)), (-1, 1))
 }
 ```
-which corresponds to every combination of pit locations and wampa location in the rooms that could potentially have a pit or wampa, (-1, 1), (0, 2), (1, 1). Note, this is not doing "model checking". This is simply enumerating all possible pit and wampa locations. This set will be used to check against our KB and to query with our queries.
+which corresponds to every combination of pit locations and wampa location in the rooms that could potentially have a pit or wampa, `(-1, 1), (0, 2), (1, 1)`. Note, this is not doing "model checking". This is simply enumerating all possible pit and wampa locations. This set will be used to check against our KB and to query with our queries.
 
 `pit_room_is_consistent_with_KB(self, room)`
 - Return True if the room could be a pit given KB, False otherwise. A room could be a pit if all adjacent rooms that have been visited have breeze. This will be used to find the model of the KB.
@@ -89,19 +89,45 @@ which corresponds to every combination of pit locations and wampa location in th
 - Return True if the room could be a wampa given KB, False otherwise. A room could be a wampa if all adjacent rooms that have been visited have stench. This will be used to find the model of the KB.
 
 `find_model_of_KB(self, possible_worlds)`
-- Return the subset of all possible worlds consistent with KB. possible_worlds is a set of tuples (pit_rooms, wampa_room), pit_rooms is a set of tuples of possible pit rooms, and wampa_room is a tuple representing a possible wampa room. A world is consistent with the KB if wampa_room is consistent and all pit rooms are consistent with the KB."
+- Return the subset of all possible worlds consistent with KB. possible_worlds is a set of tuples (pit_rooms, wampa_room), pit_rooms is a set of tuples of possible pit rooms, and wampa_room is a tuple representing a possible wampa room. A world is consistent with the KB if wampa_room is consistent and all pit rooms are consistent with the KB.
+
+Input: `possible_worlds`, from step 1.
+
+Output, `model_of_KB =`
+```
+{
+    ((), (-1, 1)),
+    ((), (0, 2)),
+    ((), (1, 1))
+}
+```
+which is the subset of worlds from `possible_worlds` that "checked out" with the model of the KB. No breeze has been perceived yet, so the only worlds that are consistent with the KB are those with no pits. And with stench perceived in `(0, 1)`, rooms `{(-1, 1), (0, 2), (1, 1)}` are the only rooms that `wampa_room_is_consistent_with_KB` returns True for.
 
 `find_model_of_query(self, query, room, possible_worlds)`
 - Where query can be "pit_in_room", "wampa_in_room", "no_pit_in_room" or "no_wampa_in_room", filter the set of worlds according to the query and room.
 
+Inputs: `"wampa_in_room", (0, 2), possible_worlds` from step 1.
+
+Output:
+```
+{
+    ((), (0, 2)),
+    (((-1, 1),), (0, 2)),
+    (((-1, 1), (1, 1)), (0, 2)),
+    (((1, 1),), (0, 2))
+}
+```
+which is the subset of `possible_worlds` that contain `(0, 2)` in the `wampa_room` index.
+
 `inference_algorithm(self):`
-- First, make some basic inferences:
+
+-First, make some basic inferences:
 1. If there is no breeze or stench in current location, infer that the adjacent rooms are safe.
 2. Infer wall locations given bump percept.
 3. Infer Luke's location given gasp percept.
 4. Infer whether the Wampa is alive given scream percept.
 
-- Then, infer whether each adjacent room is safe, pit or wampa by following the backward-chaining resolution algorithm:
+-Then, infer whether each adjacent room is safe, pit or wampa by following the backward-chaining resolution algorithm:
 1. Enumerate possible worlds.
 2. Find the model of the KB, i.e. the subset of possible worlds consistent with the KB.
 3. For each adjacent room and each query, find the model of the query.
@@ -114,7 +140,7 @@ Contains five scenarios, S1, S2, S3, S4 and S5 to test your program with. Feel f
 
 ## utils.py
 
-Contains miscellaneous helper and utility functions for various parts of the code. You may want to utilize `flatten(tup)`, `get_direction(degrees)`, and `is_facing_wampa(agent)`.
+Contains miscellaneous helper and utility functions. You may want to utilize `flatten(tup)` and `get_direction(degrees)`.
 
 ## visualize_world.py
 
