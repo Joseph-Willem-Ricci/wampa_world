@@ -16,7 +16,6 @@ class KB:
         self.pits = set()  # set of rooms (x, y) that are known to be pits
         self.wampa = set()  # room (x, y) that is known to be the Wampa
         self.luke = None  # room (x, y) that is known to be Luke
-        
 
 # AGENT
 class Agent:
