@@ -148,7 +148,7 @@ Is called during gameplay to visualize the current state of the world.
 
 ## wampa_world.py
 
-Contains the WampaWorld class which defines gameplay, the main gameplay loop, and
+Contains the WampaWorld class which defines gameplay, the main gameplay loop, and the WampaWorld environment class
 
 ### TODOs:
 
