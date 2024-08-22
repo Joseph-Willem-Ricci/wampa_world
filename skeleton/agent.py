@@ -84,9 +84,11 @@ class Agent:
         pass
 
     def pit_room_is_consistent_with_KB(self, pit_room):
-        """Return True if the pit_room could be a pit given KB, False
+        """Return True if the room could be a pit given breeze in KB, False
         otherwise. A room could be a pit if all adjacent rooms that have been
-        visited have breeze. This will be used to find the model of the KB."""
+        visited have had breeze perceived in them. A room cannot be a pit if
+        any adjacent rooms that have been visited have not had breeze perceived
+        in them. This will be used to find the model of the KB."""
         if pit_room == tuple():  # It is possible that there are no pits
             return not self.KB.breeze  # if no breeze has been perceived yet
         # TODO:
@@ -94,9 +96,11 @@ class Agent:
         pass
 
     def wampa_room_is_consistent_with_KB(self, wampa_room):
-        """Return True if the room could be a wampa given KB, False
+        """Return True if the room could be a wampa given stench in KB, False
         otherwise. A room could be a wampa if all adjacent rooms that have been
-        visited have stench. This will be used to find the model of the KB."""
+        visited have had stench perceived in them. A room cannot be a wampa if
+        any adjacent rooms that have been visited have not had stench perceived
+        in them. This will be used to find the model of the KB."""
         if wampa_room == tuple():  # It is possible that there is no Wampa
             return not self.KB.stench  # if no stench has been perceived yet
         # TODO:

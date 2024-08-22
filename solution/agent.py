@@ -103,25 +103,29 @@ class Agent:
             if flatten(wampa_room) not in pit_rooms or wampa_room == ()
         )
     
-    def pit_room_is_consistent_with_KB(self, pit_room):
-        """Return True if the pit_room could be a pit given KB, False
+    def pit_room_is_consistent_with_KB(self, room):
+        """Return True if the room could be a pit given breeze in KB, False
         otherwise. A room could be a pit if all adjacent rooms that have been
-        visited have breeze. This will be used to find the model of the KB."""
-        if pit_room == tuple():  # It is possible that there are no pits
+        visited have had breeze perceived in them. A room cannot be a pit if
+        any adjacent rooms that have been visited have not had breeze perceived
+        in them. This will be used to find the model of the KB."""
+        if room == tuple():  # It is possible that there are no pits
             return not self.KB.breeze  # if no breeze has been perceived yet
         
         return all(room in self.KB.breeze or room not in self.KB.visited_rooms
-                   for room in self.adjacent_rooms(pit_room))
+                   for room in self.adjacent_rooms(room))
     
-    def wampa_room_is_consistent_with_KB(self, wampa_room):
-        """Return True if the room could be a wampa given KB, False
+    def wampa_room_is_consistent_with_KB(self, room):
+        """Return True if the room could be a wampa given stench in KB, False
         otherwise. A room could be a wampa if all adjacent rooms that have been
-        visited have stench. This will be used to find the model of the KB."""
-        if wampa_room == tuple():  # It is possible that there is no Wampa
+        visited have had stench perceived in them. A room cannot be a wampa if
+        any adjacent rooms that have been visited have not had stench perceived
+        in them. This will be used to find the model of the KB."""
+        if room == tuple():  # It is possible that there is no Wampa
             return not self.KB.stench  # if no stench has been perceived yet
 
         return all(room in self.KB.stench or room not in self.KB.visited_rooms
-                   for room in self.adjacent_rooms(wampa_room))
+                   for room in self.adjacent_rooms(room))
 
     def find_model_of_KB(self, possible_worlds):
         """Return the subset of all possible worlds consistent with KB.
@@ -134,7 +138,6 @@ class Agent:
         return {(p, w) for p, w in possible_worlds if
                 self.wampa_room_is_consistent_with_KB(w) and 
                 all(self.pit_room_is_consistent_with_KB(room) for room in p)}
-
 
     def find_model_of_query(self, query, room, possible_worlds):
         """Where query can be "pit_in_room", "wampa_in_room", "no_pit_in_room"
