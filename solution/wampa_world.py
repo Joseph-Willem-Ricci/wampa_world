@@ -3,6 +3,7 @@ from visualize_world import visualize_world
 from utils import get_direction
 from scenarios import *
 from agent import Agent
+from time import sleep
 
 def fit_grid(grid, item):
     """Used for calculating breeze and stench locationsbased on pit and wampa
@@ -209,6 +210,7 @@ def choose_next_action(w):
     elif 'grab' in actions:
         return 'grab'
     elif 'shoot' in actions:
+        w.agent.KB.safe_rooms.add(w.agent.KB.wampa)  # if shot, room safe
         return 'shoot'
     x, y = w.agent.loc
     dx, dy = w.agent.orientation_to_delta[get_direction(w.agent.degrees)]
@@ -230,3 +232,4 @@ while True:
     w.agent.inference_algorithm()
     action = choose_next_action(w)
     w.take_action(action)
+    # sleep(.25)
