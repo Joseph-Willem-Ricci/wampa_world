@@ -3,7 +3,6 @@ from visualize_world import visualize_world
 from utils import get_direction
 from scenarios import *
 from agent import Agent
-from time import sleep
 
 def fit_grid(grid, item):
     """Used for calculating breeze and stench locationsbased on pit and wampa
@@ -224,7 +223,7 @@ def choose_next_action(w):
         return actions.pop()
 
 # RUN THE GAME
-w = WampaWorld(S1)
+w = WampaWorld(S4)
 while True:
     visualize_world(w, w.agent.loc, get_direction(w.agent.degrees))
     percepts = w.get_percepts()
@@ -232,4 +231,3 @@ while True:
     w.agent.inference_algorithm()
     action = choose_next_action(w)
     w.take_action(action)
-    # sleep(.25)
