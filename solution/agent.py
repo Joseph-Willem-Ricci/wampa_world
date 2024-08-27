@@ -1,5 +1,6 @@
-from utils import flatten, get_direction
+from random import shuffle
 from itertools import combinations as comb
+from utils import flatten, get_direction, is_facing_wampa
 
 # KNOWLEDGE BASE
 class KB:
@@ -236,3 +237,49 @@ class Agent:
             else None
         self.KB.pits.update(pit_in_room)
         
+    def all_safe_next_actions(self):
+        """Define R2D2's valid and safe next actions based on his current
+        location and knowledge of the environment."""
+        actions = ['left', 'right']
+        x, y = self.loc
+        dx, dy = self.orientation_to_delta[get_direction(self.degrees)]
+        forward_room = (x+dx, y+dy)
+        if forward_room in self.KB.safe_rooms and \
+            forward_room not in self.KB.walls:
+            actions.append('forward')
+        if self.blaster and is_facing_wampa(self):
+            actions.append('shoot')
+        if self.has_luke and self.loc == (0, 0):
+            actions.append('climb')
+        if self.KB.luke == self.loc and not self.has_luke:
+            actions.append('grab')
+
+        return actions
+
+    def choose_next_action(self):
+        """Choose next action from all safe next actions. You may want to
+        prioritizesome actions based on current state. For example, if R2D2
+        knows Luke's location and is in the same room as Luke, you may want
+        to prioritize 'grab' over all other actions. Similarly, if R2D2 has
+        Luke, you may want to prioritize moving toward the exit. You can
+        implement this as basically (randomly choosing between safe actions)
+        or as sophisticated (optimizing exploration of unvisited states,
+        finding shortest paths, etc.) as you like."""
+        actions = self.all_safe_next_actions()
+        if 'climb' in actions:
+            return 'climb'
+        elif 'grab' in actions:
+            return 'grab'
+        elif 'shoot' in actions:
+            self.KB.safe_rooms.add(self.KB.wampa)  # if shot, room safe
+            return 'shoot'
+        x, y = self.loc
+        dx, dy = self.orientation_to_delta[get_direction(self.degrees)]
+        forward_room = (x+dx, y+dy)
+        if 'forward' in actions and \
+            (forward_room not in self.KB.visited_rooms or
+            (self.has_luke and (dx == -1 or dy == -1))):
+            return 'forward'
+        else:
+            shuffle(actions)
+            return actions.pop()

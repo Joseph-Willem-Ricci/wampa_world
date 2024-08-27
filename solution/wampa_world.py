@@ -1,8 +1,7 @@
-from random import shuffle
-from visualize_world import visualize_world
-from utils import get_direction
 from scenarios import *
 from agent import Agent
+from visualize_world import visualize_world
+from utils import get_direction, is_facing_wampa
 
 def fit_grid(grid, item):
     """Used for calculating breeze and stench locationsbased on pit and wampa
@@ -117,10 +116,9 @@ class WampaWorld:
 
         #R2 fires his blaster
         elif action == "shoot":
-            blaster = self.get_blaster()
-            if blaster:
+            if self.agent.blaster:
                 self.agent.blaster = False
-                if self.is_facing_wampa():
+                if is_facing_wampa(self.agent):
                     self.wampaAlive = False
                     self.wampa = None
                     for x in range(self.gridsize[0]):
@@ -158,76 +156,13 @@ class WampaWorld:
     def get_location(self):
         x, y = self.agent.loc
         return [x, y]
-    
-    def get_blaster(self):
-        return self.agent.blaster
-    
-    def is_facing_wampa(self):
-        """You may wish to use this in all_safe_next_actions"""
-        if self.agent.KB.wampa is None:
-            return False
-        x, y = self.agent.loc
-        wx, wy = self.wampa
-        direction = get_direction(self.agent.degrees)
-        return (direction == "up" and wx == x and wy > y) or \
-                (direction == "down" and wx == x and wy < y) or \
-                (direction == "left" and wx < x and wy == y) or \
-                (direction == "right" and wx > x and wy == y)
-
-# DEFINE R2D2's POSSIBLE ACTIONS
-def all_safe_next_actions(w):
-    """Define R2D2's valid and safe next actions based on his current location
-    and knowledge of the environment."""
-    actions = ['left', 'right']
-    x, y = w.agent.loc
-    dx, dy = w.agent.orientation_to_delta[get_direction(w.agent.degrees)]
-    forward_room = (x+dx, y+dy)
-    if forward_room in w.agent.KB.safe_rooms and \
-        forward_room not in w.agent.KB.walls:
-        actions.append('forward')
-    if w.agent.blaster and w.is_facing_wampa():
-        actions.append('shoot')
-    if w.agent.has_luke and w.agent.loc == (0, 0):
-        actions.append('climb')
-    if w.agent.KB.luke == w.agent.loc and not w.agent.has_luke:
-        actions.append('grab')
-
-    return actions
-
-def choose_next_action(w):
-    """Choose next action from all safe next actions. You may want to
-    prioritizesome actions based on current state. For example, if R2D2
-    knows Luke's location and is in the same room as Luke, you may want
-    to prioritize 'grab' over all other actions. Similarly, if R2D2 has
-    Luke, you may want to prioritize moving toward the exit. You can
-    implement this as basically (randomly choosing between safe actions)
-    or as sophisticated (optimizing exploration of unvisited states,
-    finding shortest paths, etc.) as you like."""
-    actions = all_safe_next_actions(w)
-    if 'climb' in actions:
-        return 'climb'
-    elif 'grab' in actions:
-        return 'grab'
-    elif 'shoot' in actions:
-        w.agent.KB.safe_rooms.add(w.agent.KB.wampa)  # if shot, room safe
-        return 'shoot'
-    x, y = w.agent.loc
-    dx, dy = w.agent.orientation_to_delta[get_direction(w.agent.degrees)]
-    forward_room = (x+dx, y+dy)
-    if 'forward' in actions and \
-        (forward_room not in w.agent.KB.visited_rooms or
-         (w.agent.has_luke and (dx == -1 or dy == -1))):
-        return 'forward'
-    else:
-        shuffle(actions)
-        return actions.pop()
 
 # RUN THE GAME
-w = WampaWorld(S4)
+w = WampaWorld(S1)
 while True:
     visualize_world(w, w.agent.loc, get_direction(w.agent.degrees))
     percepts = w.get_percepts()
     w.agent.record_percepts(percepts, w.agent.loc)
     w.agent.inference_algorithm()
-    action = choose_next_action(w)
+    action = w.agent.choose_next_action()
     w.take_action(action)

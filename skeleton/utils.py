@@ -1,5 +1,3 @@
-from math import modf
-
 def flatten(tup):
     if len(tup) == 1:
         return tup[0]
@@ -18,3 +16,15 @@ def get_direction(degrees):
         case 0.75:
             orientation = "left"
     return orientation
+
+def is_facing_wampa(agent):
+    """You may wish to use this in all_safe_next_actions"""
+    if agent.KB.wampa is None:
+        return False
+    x, y = agent.loc
+    wx, wy = agent.KB.wampa
+    direction = get_direction(agent.degrees)
+    return (direction == "up" and wx == x and wy > y) or \
+            (direction == "down" and wx == x and wy < y) or \
+            (direction == "left" and wx < x and wy == y) or \
+            (direction == "right" and wx > x and wy == y)

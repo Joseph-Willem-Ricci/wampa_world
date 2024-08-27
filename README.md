@@ -134,13 +134,19 @@ which is the subset of `possible_worlds` that contain `(0, 2)` in the `wampa_roo
 4. If the model of the KB is a subset of the model of the query, the query is entailed by the KB.
 5. Update KB.pits, KB.wampa, and KB.safe_rooms based on any newly derived knowledge.
 
+`all_safe_next_actions(self)`
+- Define R2-D2's valid and safe next actions based on his current location and knowledge of the environment.
+
+`choose_next_action(self)`
+- Choose next action from all safe next actions. You may want to prioritize some actions based on current state. For example, if R2-D2 knows Luke's location and is in the same room as Luke, you may want to prioritize 'grab' over all other actions. Similarly, if R2-D2 has Luke, you may want to prioritize moving toward the exit. You can implement this as basically (randomly choosing between safe actions) or as sophisticated (optimizing exploration of unvisited states, finding shortest paths, etc.) as you like.
+
 ## scenarios.py
 
-Contains five scenarios, S1, S2, S3, S4 and S5 to test your program with. Feel free to write your own!
+Contains six scenarios, S1, S2, S3, S4, S5 and S6 to test your program with. Feel free to write your own!
 
 ## utils.py
 
-Contains miscellaneous helper and utility functions. You may want to utilize `flatten(tup)` and `get_direction(degrees)`.
+Contains miscellaneous helper and utility functions. You may want to utilize `flatten(tup)`, `get_direction(degrees)`, `is_facing_wampa(agent)`.
 
 ## visualize_world.py
 
@@ -148,13 +154,4 @@ Is called during gameplay to visualize the current state of the world.
 
 ## wampa_world.py
 
-Contains the WampaWorld class which defines gameplay, the main gameplay loop, and
-
-### TODOs:
-
-`all_safe_next_actions(w)`
-- Define R2-D2's valid and safe next actions based on his current location and knowledge of the environment.
-
-
-`choose_next_action(w)`
-- Choose next action from all safe next actions. You may want to prioritize some actions based on current state. For example, if R2-D2 knows Luke's location and is in the same room as Luke, you may want to prioritize 'grab' over all other actions. Similarly, if R2-D2 has Luke, you may want to prioritize moving toward the exit. You can implement this as basically (randomly choosing between safe actions) or as sophisticated (optimizing exploration of unvisited states, finding shortest paths, etc.) as you like.
+Contains the WampaWorld class which defines gameplay and the main gameplay loop
