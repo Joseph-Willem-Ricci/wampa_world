@@ -1,10 +1,9 @@
+import sys
 from scenarios import *
 from agent import Agent
 from visualize_world import visualize_world
 from utils import get_direction, is_facing_wampa
 
-
-# ENVIRONMENT
 def fit_grid(grid, item):
     """Used for calculating breeze and stench locationsbased on pit and wampa
     locations."""
@@ -160,11 +159,30 @@ class WampaWorld:
         return [x, y]
 
 # RUN THE GAME
-w = WampaWorld(S1)
-while True:
-    visualize_world(w, w.agent.loc, get_direction(w.agent.degrees))
-    percepts = w.get_percepts()
-    w.agent.record_percepts(percepts, w.agent.loc)
-    w.agent.inference_algorithm()
-    action = w.agent.choose_next_action()
-    w.take_action(action)
+def run_game(scenario):
+    w = WampaWorld(scenario)
+    while True:
+        visualize_world(w, w.agent.loc, get_direction(w.agent.degrees))
+        percepts = w.get_percepts()
+        w.agent.record_percepts(percepts, w.agent.loc)
+        w.agent.inference_algorithm()
+        action = w.agent.choose_next_action()
+        w.take_action(action)
+
+def main():
+    if len(sys.argv) != 2:
+        print("Usage: python3 wampa_world.py <scenario>")
+        quit()
+    
+    scenario_name = sys.argv[1]
+
+    try:
+        scenario = eval(scenario_name)
+    except KeyError:
+        print(f"Scenario {scenario_name} not found.")
+        quit()
+
+    run_game(scenario)
+
+if __name__ == "__main__":
+    main()

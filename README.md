@@ -18,6 +18,10 @@ Percepts: `['stench', 'breeze', 'gasp', 'bump', 'scream']`, where at some locati
 
 Actions: `'left', 'right', 'forward', 'grab', 'climb', 'shoot'`
 
+To run the game, run the following command in your terminal from your homework's directory
+
+`python wampa_world.py <scenario>`
+
 # File Structure
 
 ## agent.py
