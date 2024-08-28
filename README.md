@@ -107,6 +107,31 @@ Output, `model_of_KB =`
 ```
 which is the subset of worlds from `possible_worlds` that "checked out" with the model of the KB. No breeze has been perceived yet, so the only worlds that are consistent with the KB are those with no pits. And with stench perceived in `(0, 1)`, rooms `{(-1, 1), (0, 2), (1, 1)}` are the only rooms that `wampa_room_is_consistent_with_KB` returns True for.
 
+If we consider the state of S1 after taking the following actions from the initial position: `forward`, `left`, `left`, `forward`, `left`, `forward`
+
+To end up in the following state:
+```
+. . . P
+W L P .
+. . . .
+. > P .
+```
+
+After recording percepts in that position, we would expect `model_of_KB =`
+```
+{
+    (((1, -1),), (-1, 1)),
+    (((1, -1),), (0, 2)),
+    (((2, 0),), (-1, 1)),
+    (((2, 0),), (0, 2)),
+    (((2, 0), (1, -1)), (-1, 1)),
+    (((2, 0), (1, -1)), (0, 2))
+}
+```
+
+which is all of the possible worlds `(pit_rooms, wampa_room)` where `pit_room_is_consistent_with_KB(room)` returns True for all rooms in `pit_rooms` and `wampa_room_is_consistent_with_KB(room)` returns True for `wampa_room`.
+
+
 `find_model_of_query(self, query, room, possible_worlds)`
 - Where query can be "pit_in_room", "wampa_in_room", "no_pit_in_room" or "no_wampa_in_room", filter the set of worlds according to the query and room.
 

@@ -19,7 +19,7 @@ def get_direction(degrees):
 
 def is_facing_wampa(agent):
     """You may wish to use this in all_safe_next_actions"""
-    if agent.KB.wampa is None:
+    if agent.KB.wampa == set():
         return False
     x, y = agent.loc
     wx, wy = agent.KB.wampa

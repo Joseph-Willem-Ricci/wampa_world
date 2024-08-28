@@ -138,8 +138,9 @@ class Agent:
 
         return {(p, w) for p, w in possible_worlds if
                 self.wampa_room_is_consistent_with_KB(w) and 
-                all(self.pit_room_is_consistent_with_KB(room) for room in p)}
-
+                (all(self.pit_room_is_consistent_with_KB(room) for room in p)
+                if p else self.pit_room_is_consistent_with_KB(p))}  #  empty p
+    
     def find_model_of_query(self, query, room, possible_worlds):
         """Where query can be "pit_in_room", "wampa_in_room", "no_pit_in_room"
         or "no_wampa_in_room",filter the set of worlds
@@ -204,7 +205,7 @@ class Agent:
         if self.KB.gasp:
             self.KB.luke = self.loc
         if self.KB.scream:
-            self.KB.wampa = None
+            self.KB.wampa = set()
             self.KB.stench.clear()
         
         # initialize our four queries and sets to store where the query is true
@@ -234,7 +235,7 @@ class Agent:
         safe_adjacent_rooms = no_pit_in_room.intersection(no_wampa_in_room)
         self.KB.safe_rooms.update(safe_adjacent_rooms)
         self.KB.wampa = wampa_in_room.pop() if len(wampa_in_room) == 1 \
-            else None
+            else set()
         self.KB.pits.update(pit_in_room)
         
     def all_safe_next_actions(self):
