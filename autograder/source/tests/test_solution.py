@@ -5,7 +5,7 @@ import unittest
 # import timeout_decorator
 from gradescope_utils.autograder_utils.decorators import weight, visibility, tags
 from agent import Agent
-from wampa_world import WampaWorld
+from wampa_world import WampaWorld, run_game
 from scenarios import *
 
 def relpath(*args):
@@ -392,6 +392,41 @@ class TestSolution(unittest.TestCase):
 
 
     # TEST FULL SOLUTIONS #
+    def test_run_game_1(self):
+        score, has_luke, loc = run_game(S1)
+        self.assertGreater(score, 0, msg = "Expected score to be greater than 0 after running game on S1.")
+        self.assertTrue(has_luke, msg = "Expected R2D2 to have luke after running game on S1.")
+        self.assertEqual(loc, (0, 0), msg = "Expected R2D2 to be in room (0, 0) after running game on S1.")
+
+    def test_run_game_2(self):
+        score, has_luke, loc = run_game(S2)
+        self.assertGreater(score, 0, msg = "Expected score to be greater than 0 after running game on S2.")
+        self.assertTrue(has_luke, msg = "Expected R2D2 to have luke after running game on S2.")
+        self.assertEqual(loc, (0, 0), msg = "Expected R2D2 to be in room (0, 0) after running game on S2.")
+
+    def test_run_game_3(self):
+        score, has_luke, loc = run_game(S3)
+        self.assertGreater(score, 0, msg = "Expected score to be greater than 0 after running game on S3.")
+        self.assertTrue(has_luke, msg = "Expected R2D2 to have luke after running game on S3.")
+        self.assertEqual(loc, (0, 0), msg = "Expected R2D2 to be in room (0, 0) after running game on S3.")
+    
+    def test_run_game_4(self):
+        score, has_luke, loc = run_game(S4)
+        self.assertGreater(score, 0, msg = "Expected score to be greater than 0 after running game on S4.")
+        self.assertTrue(has_luke, msg = "Expected R2D2 to have luke after running game on S4.")
+        self.assertEqual(loc, (0, 0), msg = "Expected R2D2 to be in room (0, 0) after running game on S4.")
+    
+    def test_run_game_5(self):
+        score, has_luke, loc = run_game(S5)
+        self.assertGreater(score, 0, msg = "Expected score to be greater than 0 after running game on S5.")
+        self.assertTrue(has_luke, msg = "Expected R2D2 to have luke after running game on S5.")
+        self.assertEqual(loc, (0, 0), msg = "Expected R2D2 to be in room (0, 0) after running game on S5.")
+    
+    def test_run_game_6(self):
+        score, has_luke, loc = run_game(S6)
+        self.assertGreater(score, 0, msg = "Expected score to be greater than 0 after running game on S6.")
+        self.assertTrue(has_luke, msg = "Expected R2D2 to have luke after running game on S6.")
+        self.assertEqual(loc, (0, 0), msg = "Expected R2D2 to be in room (0, 0) after running game on S6.")
     
 
 
