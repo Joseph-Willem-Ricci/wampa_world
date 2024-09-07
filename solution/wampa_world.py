@@ -1,9 +1,8 @@
-from random import shuffle
-from visualize_world import visualize_world
-from utils import get_direction
+import sys
 from scenarios import *
 from agent import Agent
-from time import sleep
+from visualize_world import visualize_world
+from utils import get_direction, is_facing_wampa
 
 def fit_grid(grid, item):
     """Used for calculating breeze and stench locationsbased on pit and wampa
@@ -71,38 +70,30 @@ class WampaWorld:
         if action == "forward":
             moved = True
             orientation = get_direction(self.agent.degrees)
-            if orientation == "up":
-                if y < len(self.grid[0]) - 1:
-                    self.agent.loc = (x, y + 1)
-                else:
-                    moved = False
-            elif orientation == "down":
-                if y > 0:
-                    self.agent.loc = (x, y - 1)
-                else:
-                    moved = False
-            elif orientation == "left":
-                if x > 0:
-                    self.agent.loc = (x - 1, y)
-                else:
-                    moved = False
-            elif orientation == "right":
-                if x < len(self.grid) - 1:
-                    self.agent.loc = (x + 1, y)
-                else:
-                    moved = False
+            movements = {
+                "up": (0, 1),
+                "down": (0, -1),
+                "left": (-1, 0),
+                "right": (1, 0)
+            }
+
+            dx, dy = movements.get(orientation, (0, 0))
+            new_x, new_y = x + dx, y + dy
+
+            if 0 <= new_x < len(self.grid) and 0 <= new_y < len(self.grid[0]):
+                self.agent.loc = (new_x, new_y)
+            else:
+                moved = False
+
             if (self.get_location() == self.wampa and self.wampaAlive) or \
                 self.get_location() in self.pits:
                 self.agent.score -= 1000
                 print("R2-D2 has been crushed, -1000 points")
                 print("Your final score is: ", self.agent.score)
-                quit()
-            if moved == False:
-                percepts = self.get_percepts()
-                percepts[3] = "bump"
-            else:
-                percepts = self.get_percepts()
-                percepts[3] = None  # reset bump = None if no bump
+                return False
+            
+            percepts = self.get_percepts()
+            percepts[3] = "bump" if not moved else None  # reset bump = None if no bump
 
         #R2 turns left
         elif action == "left":
@@ -118,10 +109,9 @@ class WampaWorld:
 
         #R2 fires his blaster
         elif action == "shoot":
-            blaster = self.get_blaster()
-            if blaster:
+            if self.agent.blaster:
                 self.agent.blaster = False
-                if self.is_facing_wampa():
+                if is_facing_wampa(self.agent):
                     self.wampaAlive = False
                     self.wampa = None
                     for x in range(self.gridsize[0]):
@@ -148,88 +138,47 @@ class WampaWorld:
                 self.agent.score += 1000
                 print("Congrats! R2 has saved Luke! +1000 points!")
                 print("Your final score is: ", self.agent.score)
-                quit()
+                return False
             else:
                 print("Climb requirements are not met yet")
 
         else:
             raise ValueError("R2-D2 can only move Forward, turn Left, turn \
                              Right, Shoot, Grab, or Climb.")
+        return True
     
     def get_location(self):
         x, y = self.agent.loc
         return [x, y]
-    
-    def get_blaster(self):
-        return self.agent.blaster
-    
-    def is_facing_wampa(self):
-        """You may wish to use this in all_safe_next_actions"""
-        if self.agent.KB.wampa is None:
-            return False
-        x, y = self.agent.loc
-        wx, wy = self.wampa
-        direction = get_direction(self.agent.degrees)
-        return (direction == "up" and wx == x and wy > y) or \
-                (direction == "down" and wx == x and wy < y) or \
-                (direction == "left" and wx < x and wy == y) or \
-                (direction == "right" and wx > x and wy == y)
-
-# DEFINE R2D2's POSSIBLE ACTIONS
-def all_safe_next_actions(w):
-    """Define R2D2's valid and safe next actions based on his current location
-    and knowledge of the environment."""
-    actions = ['left', 'right']
-    x, y = w.agent.loc
-    dx, dy = w.agent.orientation_to_delta[get_direction(w.agent.degrees)]
-    forward_room = (x+dx, y+dy)
-    if forward_room in w.agent.KB.safe_rooms and \
-        forward_room not in w.agent.KB.walls:
-        actions.append('forward')
-    if w.agent.blaster and w.is_facing_wampa():
-        actions.append('shoot')
-    if w.agent.has_luke and w.agent.loc == (0, 0):
-        actions.append('climb')
-    if w.agent.KB.luke == w.agent.loc and not w.agent.has_luke:
-        actions.append('grab')
-
-    return actions
-
-def choose_next_action(w):
-    """Choose next action from all safe next actions. You may want to
-    prioritizesome actions based on current state. For example, if R2D2
-    knows Luke's location and is in the same room as Luke, you may want
-    to prioritize 'grab' over all other actions. Similarly, if R2D2 has
-    Luke, you may want to prioritize moving toward the exit. You can
-    implement this as basically (randomly choosing between safe actions)
-    or as sophisticated (optimizing exploration of unvisited states,
-    finding shortest paths, etc.) as you like."""
-    actions = all_safe_next_actions(w)
-    if 'climb' in actions:
-        return 'climb'
-    elif 'grab' in actions:
-        return 'grab'
-    elif 'shoot' in actions:
-        w.agent.KB.safe_rooms.add(w.agent.KB.wampa)  # if shot, room safe
-        return 'shoot'
-    x, y = w.agent.loc
-    dx, dy = w.agent.orientation_to_delta[get_direction(w.agent.degrees)]
-    forward_room = (x+dx, y+dy)
-    if 'forward' in actions and \
-        (forward_room not in w.agent.KB.visited_rooms or
-         (w.agent.has_luke and (dx == -1 or dy == -1))):
-        return 'forward'
-    else:
-        shuffle(actions)
-        return actions.pop()
 
 # RUN THE GAME
-w = WampaWorld(S1)
-while True:
-    visualize_world(w, w.agent.loc, get_direction(w.agent.degrees))
-    percepts = w.get_percepts()
-    w.agent.record_percepts(percepts, w.agent.loc)
-    w.agent.inference_algorithm()
-    action = choose_next_action(w)
-    w.take_action(action)
-    # sleep(.25)
+def run_game(scenario):
+    w = WampaWorld(scenario)
+    is_playing = True
+    while is_playing:
+        visualize_world(w, w.agent.loc, get_direction(w.agent.degrees))
+        percepts = w.get_percepts()
+        w.agent.record_percepts(percepts, w.agent.loc)
+        w.agent.inference_algorithm()
+        action = w.agent.choose_next_action()
+        is_playing = w.take_action(action)
+    return w.agent.score, w.agent.has_luke, w.agent.loc
+
+
+def main():
+    if len(sys.argv) != 2:
+        print("Usage: python3 wampa_world.py <scenario>")
+        quit()
+    
+    scenario_name = sys.argv[1]
+
+    try:
+        scenario = eval(scenario_name)
+    except:
+        print(f"Scenario {scenario_name} not found.")
+        quit()
+
+    run_game(scenario)
+
+if __name__ == "__main__":
+    main()

@@ -1,5 +1,6 @@
-from utils import flatten, get_direction
+from random import shuffle
 from itertools import combinations as comb
+from utils import flatten, get_direction, is_facing_wampa
 
 # KNOWLEDGE BASE
 class KB:
@@ -137,8 +138,9 @@ class Agent:
 
         return {(p, w) for p, w in possible_worlds if
                 self.wampa_room_is_consistent_with_KB(w) and 
-                all(self.pit_room_is_consistent_with_KB(room) for room in p)}
-
+                (all(self.pit_room_is_consistent_with_KB(room) for room in p)
+                if p else self.pit_room_is_consistent_with_KB(p))}  #  empty p
+    
     def find_model_of_query(self, query, room, possible_worlds):
         """Where query can be "pit_in_room", "wampa_in_room", "no_pit_in_room"
         or "no_wampa_in_room",filter the set of worlds
@@ -203,7 +205,7 @@ class Agent:
         if self.KB.gasp:
             self.KB.luke = self.loc
         if self.KB.scream:
-            self.KB.wampa = None
+            self.KB.wampa = set()
             self.KB.stench.clear()
         
         # initialize our four queries and sets to store where the query is true
@@ -233,6 +235,52 @@ class Agent:
         safe_adjacent_rooms = no_pit_in_room.intersection(no_wampa_in_room)
         self.KB.safe_rooms.update(safe_adjacent_rooms)
         self.KB.wampa = wampa_in_room.pop() if len(wampa_in_room) == 1 \
-            else None
+            else set()
         self.KB.pits.update(pit_in_room)
         
+    def all_safe_next_actions(self):
+        """Define R2D2's valid and safe next actions based on his current
+        location and knowledge of the environment."""
+        actions = ['left', 'right']
+        x, y = self.loc
+        dx, dy = self.orientation_to_delta[get_direction(self.degrees)]
+        forward_room = (x+dx, y+dy)
+        if forward_room in self.KB.safe_rooms and \
+            forward_room not in self.KB.walls:
+            actions.append('forward')
+        if self.blaster and is_facing_wampa(self):
+            actions.append('shoot')
+        if self.has_luke and self.loc == (0, 0):
+            actions.append('climb')
+        if self.KB.luke == self.loc and not self.has_luke:
+            actions.append('grab')
+
+        return actions
+
+    def choose_next_action(self):
+        """Choose next action from all safe next actions. You may want to
+        prioritizesome actions based on current state. For example, if R2D2
+        knows Luke's location and is in the same room as Luke, you may want
+        to prioritize 'grab' over all other actions. Similarly, if R2D2 has
+        Luke, you may want to prioritize moving toward the exit. You can
+        implement this as basically (randomly choosing between safe actions)
+        or as sophisticated (optimizing exploration of unvisited states,
+        finding shortest paths, etc.) as you like."""
+        actions = self.all_safe_next_actions()
+        if 'climb' in actions:
+            return 'climb'
+        elif 'grab' in actions:
+            return 'grab'
+        elif 'shoot' in actions:
+            self.KB.safe_rooms.add(self.KB.wampa)  # if shot, room safe
+            return 'shoot'
+        x, y = self.loc
+        dx, dy = self.orientation_to_delta[get_direction(self.degrees)]
+        forward_room = (x+dx, y+dy)
+        if 'forward' in actions and \
+            (forward_room not in self.KB.visited_rooms or
+            (self.has_luke and (dx == -1 or dy == -1))):
+            return 'forward'
+        else:
+            shuffle(actions)
+            return actions.pop()

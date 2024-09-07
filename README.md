@@ -18,6 +18,10 @@ Percepts: `['stench', 'breeze', 'gasp', 'bump', 'scream']`, where at some locati
 
 Actions: `'left', 'right', 'forward', 'grab', 'climb', 'shoot'`
 
+To run the game, run the following command in your terminal from your homework's directory
+
+`python wampa_world.py <scenario>`
+
 # File Structure
 
 ## agent.py
@@ -103,6 +107,31 @@ Output, `model_of_KB =`
 ```
 which is the subset of worlds from `possible_worlds` that "checked out" with the model of the KB. No breeze has been perceived yet, so the only worlds that are consistent with the KB are those with no pits. And with stench perceived in `(0, 1)`, rooms `{(-1, 1), (0, 2), (1, 1)}` are the only rooms that `wampa_room_is_consistent_with_KB` returns True for.
 
+If we consider the state of S1 after taking the following actions from the initial position: `forward`, `left`, `left`, `forward`, `left`, `forward`
+
+To end up in the following state:
+```
+. . . P
+W L P .
+. . . .
+. > P .
+```
+
+After recording percepts in that position, we would expect `model_of_KB =`
+```
+{
+    (((1, -1),), (-1, 1)),
+    (((1, -1),), (0, 2)),
+    (((2, 0),), (-1, 1)),
+    (((2, 0),), (0, 2)),
+    (((2, 0), (1, -1)), (-1, 1)),
+    (((2, 0), (1, -1)), (0, 2))
+}
+```
+
+which is all of the possible worlds `(pit_rooms, wampa_room)` where `pit_room_is_consistent_with_KB(room)` returns True for all rooms in `pit_rooms` and `wampa_room_is_consistent_with_KB(room)` returns True for `wampa_room`.
+
+
 `find_model_of_query(self, query, room, possible_worlds)`
 - Where query can be "pit_in_room", "wampa_in_room", "no_pit_in_room" or "no_wampa_in_room", filter the set of worlds according to the query and room.
 
@@ -134,13 +163,19 @@ which is the subset of `possible_worlds` that contain `(0, 2)` in the `wampa_roo
 4. If the model of the KB is a subset of the model of the query, the query is entailed by the KB.
 5. Update KB.pits, KB.wampa, and KB.safe_rooms based on any newly derived knowledge.
 
+`all_safe_next_actions(self)`
+- Define R2-D2's valid and safe next actions based on his current location and knowledge of the environment.
+
+`choose_next_action(self)`
+- Choose next action from all safe next actions. You may want to prioritize some actions based on current state. For example, if R2-D2 knows Luke's location and is in the same room as Luke, you may want to prioritize 'grab' over all other actions. Similarly, if R2-D2 has Luke, you may want to prioritize moving toward the exit. You can implement this as basically (randomly choosing between safe actions) or as sophisticated (optimizing exploration of unvisited states, finding shortest paths, etc.) as you like.
+
 ## scenarios.py
 
-Contains five scenarios, S1, S2, S3, S4 and S5 to test your program with. Feel free to write your own!
+Contains six scenarios, S1, S2, S3, S4, S5 and S6 to test your program with. Feel free to write your own!
 
 ## utils.py
 
-Contains miscellaneous helper and utility functions. You may want to utilize `flatten(tup)` and `get_direction(degrees)`.
+Contains miscellaneous helper and utility functions. You may want to utilize `flatten(tup)`, `get_direction(degrees)`, `is_facing_wampa(agent)`.
 
 ## visualize_world.py
 
@@ -148,13 +183,4 @@ Is called during gameplay to visualize the current state of the world.
 
 ## wampa_world.py
 
-Contains the WampaWorld class which defines gameplay, the main gameplay loop, and the WampaWorld environment class
-
-### TODOs:
-
-`all_safe_next_actions(w)`
-- Define R2-D2's valid and safe next actions based on his current location and knowledge of the environment.
-
-
-`choose_next_action(w)`
-- Choose next action from all safe next actions. You may want to prioritize some actions based on current state. For example, if R2-D2 knows Luke's location and is in the same room as Luke, you may want to prioritize 'grab' over all other actions. Similarly, if R2-D2 has Luke, you may want to prioritize moving toward the exit. You can implement this as basically (randomly choosing between safe actions) or as sophisticated (optimizing exploration of unvisited states, finding shortest paths, etc.) as you like.
+Contains the WampaWorld class which defines gameplay and the main gameplay loop

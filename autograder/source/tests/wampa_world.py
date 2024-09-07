@@ -1,7 +1,6 @@
 import sys
 from scenarios import *
 from agent import Agent
-from visualize_world import visualize_world
 from utils import get_direction, is_facing_wampa
 
 def fit_grid(grid, item):
@@ -32,6 +31,7 @@ class WampaWorld:
         self.pits = worldInit['pits']
         self.luke = worldInit['luke']
         self.wampaAlive = True
+        self.game_is_running = True
 
         # calculate breeze and stench locations
         breeze = []
@@ -70,30 +70,36 @@ class WampaWorld:
         if action == "forward":
             moved = True
             orientation = get_direction(self.agent.degrees)
-            movements = {
-                "up": (0, 1),
-                "down": (0, -1),
-                "left": (-1, 0),
-                "right": (1, 0)
-            }
-
-            dx, dy = movements.get(orientation, (0, 0))
-            new_x, new_y = x + dx, y + dy
-
-            if 0 <= new_x < len(self.grid) and 0 <= new_y < len(self.grid[0]):
-                self.agent.loc = (new_x, new_y)
-            else:
-                moved = False
-
+            if orientation == "up":
+                if y < len(self.grid[0]) - 1:
+                    self.agent.loc = (x, y + 1)
+                else:
+                    moved = False
+            elif orientation == "down":
+                if y > 0:
+                    self.agent.loc = (x, y - 1)
+                else:
+                    moved = False
+            elif orientation == "left":
+                if x > 0:
+                    self.agent.loc = (x - 1, y)
+                else:
+                    moved = False
+            elif orientation == "right":
+                if x < len(self.grid) - 1:
+                    self.agent.loc = (x + 1, y)
+                else:
+                    moved = False
             if (self.get_location() == self.wampa and self.wampaAlive) or \
                 self.get_location() in self.pits:
                 self.agent.score -= 1000
-                print("R2-D2 has been crushed, -1000 points")
-                print("Your final score is: ", self.agent.score)
-                return False
-            
-            percepts = self.get_percepts()
-            percepts[3] = "bump" if not moved else None  # reset bump = None if no bump
+                self.game_is_running = False
+            if moved == False:
+                percepts = self.get_percepts()
+                percepts[3] = "bump"
+            else:
+                percepts = self.get_percepts()
+                percepts[3] = None  # reset bump = None if no bump
 
         #R2 turns left
         elif action == "left":
@@ -118,34 +124,22 @@ class WampaWorld:
                         for y in range(self.gridsize[1]):
                             self.grid[x][y][4] = "scream"  # scream everywhere
                             self.grid[x][y][0] = None  # stench is gone
-                print("Blaster bolt was shot")
-            print("No more blaster bolts available")
 
         #R2 grabs Luke
         elif action == "grab":
             if self.get_location() == self.luke and not self.agent.has_luke:
                 self.agent.has_luke = True
                 self.luke = None
-                print("R2-D2 has picked up Luke")
-            elif self.agent.has_luke:
-                print("R2 already has Luke")
-            else:
-                print("R2 cannot pick up Luke here")
 
         #R2 climbs out
         elif action == "climb":
             if self.agent.has_luke and self.agent.loc == (0, 0):
                 self.agent.score += 1000
-                print("Congrats! R2 has saved Luke! +1000 points!")
-                print("Your final score is: ", self.agent.score)
-                return False
-            else:
-                print("Climb requirements are not met yet")
+                self.game_is_running = False
 
         else:
             raise ValueError("R2-D2 can only move Forward, turn Left, turn \
                              Right, Shoot, Grab, or Climb.")
-        return True
     
     def get_location(self):
         x, y = self.agent.loc
@@ -154,28 +148,24 @@ class WampaWorld:
 # RUN THE GAME
 def run_game(scenario):
     w = WampaWorld(scenario)
-    is_playing = True
-    while is_playing:
-        visualize_world(w, w.agent.loc, get_direction(w.agent.degrees))
+    while w.game_is_running:
         percepts = w.get_percepts()
         w.agent.record_percepts(percepts, w.agent.loc)
         w.agent.inference_algorithm()
         action = w.agent.choose_next_action()
-        is_playing = w.take_action(action)
-    return w.agent.score, w.agent.has_luke, w.agent.loc
+        w.take_action(action)
 
+    return w.agent.score, w.agent.has_luke, w.agent.loc
 
 def main():
     if len(sys.argv) != 2:
-        print("Usage: python3 wampa_world.py <scenario>")
         quit()
     
     scenario_name = sys.argv[1]
 
     try:
         scenario = eval(scenario_name)
-    except:
-        print(f"Scenario {scenario_name} not found.")
+    except KeyError:
         quit()
 
     run_game(scenario)

@@ -1,5 +1,6 @@
-from utils import flatten, get_direction
+from random import shuffle
 from itertools import combinations
+from utils import flatten, get_direction, is_facing_wampa
 
 # KNOWLEDGE BASE
 class KB:
@@ -171,3 +172,27 @@ class Agent:
         ...
         pass
         
+    def all_safe_next_actions(self):
+        """Define R2D2's valid and safe next actions based on his current
+        location and knowledge of the environment."""
+        safe_actions = []
+        x, y = self.loc
+        dx, dy = self.orientation_to_delta[get_direction(self.degrees)]
+        forward_room = (x+dx, y+dy)
+        # TODO:
+        ...
+        return safe_actions
+
+    def choose_next_action(self):
+        """Choose next action from all safe next actions. You may want to
+        prioritizesome actions based on current state. For example, if R2D2
+        knows Luke's location and is in the same room as Luke, you may want
+        to prioritize 'grab' over all other actions. Similarly, if R2D2 has
+        Luke, you may want to prioritize moving toward the exit. You can
+        implement this as basically (randomly choosing between safe actions)
+        or as sophisticated (optimizing exploration of unvisited states,
+        finding shortest paths, etc.) as you like."""
+        actions = self.all_safe_next_actions()
+        # TODO:
+        ...
+        return actions
