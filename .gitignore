@@ -3,3 +3,4 @@ test_solution_example.py
 autograder/source/tests/agent.py
 autograder/source/tests/__pycache__
 solution/__pycache__
+skeleton/__pycache__

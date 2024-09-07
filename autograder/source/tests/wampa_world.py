@@ -31,7 +31,7 @@ class WampaWorld:
         self.pits = worldInit['pits']
         self.luke = worldInit['luke']
         self.wampaAlive = True
-        self.game_is_running = True
+        self.is_playing = True
 
         # calculate breeze and stench locations
         breeze = []
@@ -70,36 +70,28 @@ class WampaWorld:
         if action == "forward":
             moved = True
             orientation = get_direction(self.agent.degrees)
-            if orientation == "up":
-                if y < len(self.grid[0]) - 1:
-                    self.agent.loc = (x, y + 1)
-                else:
-                    moved = False
-            elif orientation == "down":
-                if y > 0:
-                    self.agent.loc = (x, y - 1)
-                else:
-                    moved = False
-            elif orientation == "left":
-                if x > 0:
-                    self.agent.loc = (x - 1, y)
-                else:
-                    moved = False
-            elif orientation == "right":
-                if x < len(self.grid) - 1:
-                    self.agent.loc = (x + 1, y)
-                else:
-                    moved = False
+            movements = {
+                "up": (0, 1),
+                "down": (0, -1),
+                "left": (-1, 0),
+                "right": (1, 0)
+            }
+
+            dx, dy = movements.get(orientation, (0, 0))
+            new_x, new_y = x + dx, y + dy
+
+            if 0 <= new_x < len(self.grid) and 0 <= new_y < len(self.grid[0]):
+                self.agent.loc = (new_x, new_y)
+            else:
+                moved = False
+
             if (self.get_location() == self.wampa and self.wampaAlive) or \
                 self.get_location() in self.pits:
                 self.agent.score -= 1000
-                self.game_is_running = False
-            if moved == False:
-                percepts = self.get_percepts()
-                percepts[3] = "bump"
-            else:
-                percepts = self.get_percepts()
-                percepts[3] = None  # reset bump = None if no bump
+                self.is_playing = False
+            
+            percepts = self.get_percepts()
+            percepts[3] = "bump" if not moved else None  # reset bump = None if no bump
 
         #R2 turns left
         elif action == "left":
@@ -135,7 +127,7 @@ class WampaWorld:
         elif action == "climb":
             if self.agent.has_luke and self.agent.loc == (0, 0):
                 self.agent.score += 1000
-                self.game_is_running = False
+                self.is_playing = False
 
         else:
             raise ValueError("R2-D2 can only move Forward, turn Left, turn \
@@ -148,24 +140,26 @@ class WampaWorld:
 # RUN THE GAME
 def run_game(scenario):
     w = WampaWorld(scenario)
-    while w.game_is_running:
+    while w.is_playing:
         percepts = w.get_percepts()
         w.agent.record_percepts(percepts, w.agent.loc)
         w.agent.inference_algorithm()
         action = w.agent.choose_next_action()
         w.take_action(action)
-
     return w.agent.score, w.agent.has_luke, w.agent.loc
+
 
 def main():
     if len(sys.argv) != 2:
+        print("Usage: python3 wampa_world.py <scenario>")
         quit()
     
     scenario_name = sys.argv[1]
 
     try:
         scenario = eval(scenario_name)
-    except KeyError:
+    except:
+        print(f"Scenario {scenario_name} not found.")
         quit()
 
     run_game(scenario)

@@ -32,6 +32,7 @@ class WampaWorld:
         self.pits = worldInit['pits']
         self.luke = worldInit['luke']
         self.wampaAlive = True
+        self.is_playing = True
 
         # calculate breeze and stench locations
         breeze = []
@@ -90,7 +91,7 @@ class WampaWorld:
                 self.agent.score -= 1000
                 print("R2-D2 has been crushed, -1000 points")
                 print("Your final score is: ", self.agent.score)
-                return False
+                self.is_playing = False
             
             percepts = self.get_percepts()
             percepts[3] = "bump" if not moved else None  # reset bump = None if no bump
@@ -138,14 +139,13 @@ class WampaWorld:
                 self.agent.score += 1000
                 print("Congrats! R2 has saved Luke! +1000 points!")
                 print("Your final score is: ", self.agent.score)
-                return False
+                self.is_playing = False
             else:
                 print("Climb requirements are not met yet")
 
         else:
             raise ValueError("R2-D2 can only move Forward, turn Left, turn \
                              Right, Shoot, Grab, or Climb.")
-        return True
     
     def get_location(self):
         x, y = self.agent.loc
@@ -154,14 +154,13 @@ class WampaWorld:
 # RUN THE GAME
 def run_game(scenario):
     w = WampaWorld(scenario)
-    is_playing = True
-    while is_playing:
+    while w.is_playing:
         visualize_world(w, w.agent.loc, get_direction(w.agent.degrees))
         percepts = w.get_percepts()
         w.agent.record_percepts(percepts, w.agent.loc)
         w.agent.inference_algorithm()
         action = w.agent.choose_next_action()
-        is_playing = w.take_action(action)
+        w.take_action(action)
     return w.agent.score, w.agent.has_luke, w.agent.loc
 
 
