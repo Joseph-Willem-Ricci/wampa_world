@@ -8,7 +8,7 @@ from gradescope_utils.autograder_utils.files import check_submitted_files
 class TestFiles(unittest.TestCase):
     @weight(0)
     def test_submitted_files(self):
-        missing_files = check_submitted_files(['agent.py', 'wampa_world.py'], base='')
+        missing_files = check_submitted_files(['agent.py'], base='')
         for path in missing_files:
             print('Missing %s' % path)
         self.assertEqual(len(missing_files), 0, 'Missing some required files!')

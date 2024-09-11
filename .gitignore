@@ -4,3 +4,4 @@ autograder/source/tests/agent.py
 autograder/source/tests/__pycache__
 solution/__pycache__
 skeleton/__pycache__
+autograder/source/*.zip

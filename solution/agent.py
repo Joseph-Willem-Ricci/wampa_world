@@ -284,3 +284,14 @@ class Agent:
         else:
             shuffle(actions)
             return actions.pop()
+        
+# Approximately how many hours did you spend on this assignment?
+feedback_question_1 = 99
+
+# Which aspects of this assignment did you find most challenging?
+# Were there any significant stumbling blocks?
+feedback_question_2 = """Test"""
+
+# Which aspects of this assignment did you like?
+# Is there anything you would have changed?
+feedback_question_3 = """Test"""
