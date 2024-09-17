@@ -130,8 +130,7 @@ class WampaWorld:
                 self.is_playing = False
 
         else:
-            raise ValueError("R2-D2 can only move Forward, turn Left, turn \
-                             Right, Shoot, Grab, or Climb.")
+            raise ValueError("R2-D2 can only move Forward, turn Left, turn Right, Shoot, Grab, or Climb.")
     
     def get_location(self):
         x, y = self.agent.loc
