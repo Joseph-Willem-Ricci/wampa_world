@@ -1,8 +1,4 @@
-24_summer_compiled_feedback.xlsx
-test_solution_example.py
-autograder/source/tests/agent.py
 autograder/source/tests/__pycache__
 solution/__pycache__
 skeleton/__pycache__
 autograder/source/*.zip
-incomplete_solution_for_testing/*
