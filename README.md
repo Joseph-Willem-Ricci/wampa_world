@@ -1,6 +1,6 @@
 # Wampa World
 
-This Wampa World logic-based agent homework was developed by Joseph Willem Ricci and Ben Swanson upon [the original Jupyter Notebook by Lara Martin](https://laramartin.net/Principles-of-AI/homeworks/logic/HW2-LogicalAgents.ipynb).
+This Wampa World logic-based agent homework was developed by [Joseph Willem Ricci](https://github.com/Joseph-Willem-Ricci/) and [Ben Swanson](https://www.linkedin.com/in/benmswanson/) upon [the original Jupyter Notebook](https://laramartin.net/Principles-of-AI/homeworks/logic/HW2-LogicalAgents.ipynb) by [Lara Martin](https://laramartin.net/).
 
 # Gameplay
 
