@@ -1,6 +1,6 @@
 # Wampa World
 
-Wampa World logic-based agent homework was developed by Joseph Willem Ricci upon the original Jupyter Notebook by Lara Martin.
+This Wampa World logic-based agent homework was developed by Joseph Willem Ricci and Ben Swanson upon [the original Jupyter Notebook by Lara Martin](https://laramartin.net/Principles-of-AI/homeworks/logic/HW2-LogicalAgents.ipynb).
 
 # Gameplay
 
@@ -184,3 +184,9 @@ Is called during gameplay to visualize the current state of the world.
 ## wampa_world.py
 
 Contains the WampaWorld class which defines gameplay and the main gameplay loop
+
+# Submission
+
+Upload your file agent.py to the Gradescope assignment submission.
+
+A (non-exhaustive) suite of test cases for each method can help you throubleshoot and ascertain whether you are along the right track.
