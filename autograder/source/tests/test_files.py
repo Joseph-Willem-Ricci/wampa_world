@@ -18,6 +18,6 @@ class TestFiles(unittest.TestCase):
     def test_style(self):
         """Test that we conform to PEP-8 style standards."""
         style = pycodestyle.StyleGuide()
-        result = style.check_files(['agent.py', 'wampa_world.py'])
+        result = style.check_files(['agent.py'])
         self.assertEqual(result.total_errors, 0,
                          "Please fix the above style errors/warnings and resubmit.")

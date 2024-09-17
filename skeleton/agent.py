@@ -2,6 +2,7 @@ from random import shuffle
 from itertools import combinations
 from utils import flatten, get_direction, is_facing_wampa
 
+
 # KNOWLEDGE BASE
 class KB:
     def __init__(self, agent):
@@ -18,21 +19,22 @@ class KB:
         self.wampa = set()  # room (x, y) that is known to be the Wampa
         self.luke = None  # room (x, y) that is known to be Luke
 
+
 # AGENT
 class Agent:
     def __init__(self, world):
         self.world = world
-        self.loc = (0,0)
+        self.loc = (0, 0)
         self.score = 0
         self.degrees = 0
         self.blaster = True
         self.has_luke = False
         self.percepts = ['stench', 'breeze', 'gasp', 'bump', 'scream']
         self.orientation_to_delta = {
-        "up": (0, 1),  # (dx, dy)
-        "down": (0, -1),
-        "left": (-1, 0),
-        "right": (1, 0)
+            "up": (0, 1),  # (dx, dy)
+            "down": (0, -1),
+            "left": (-1, 0),
+            "right": (1, 0)
         }
         self.KB = KB(self)
 
@@ -76,7 +78,7 @@ class Agent:
 
         You may find the utils.flatten(tup) method useful here for flattening
         wampa_room from a tuple of tuples into a tuple.
-        
+
         The output of this function will be queried to find the model of the
         query, and will be checked for consistency with the KB
         to find the model of the KB."""
@@ -171,7 +173,7 @@ class Agent:
         # TODO:
         ...
         pass
-        
+
     def all_safe_next_actions(self):
         """Define R2D2's valid and safe next actions based on his current
         location and knowledge of the environment."""
@@ -196,7 +198,8 @@ class Agent:
         # TODO:
         ...
         return actions
-    
+
+
 # Approximately how many hours did you spend on this assignment?
 feedback_question_1 = ...
 

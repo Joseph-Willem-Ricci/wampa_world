@@ -12,32 +12,32 @@ def relpath(*args):
 
 class TestSolution(unittest.TestCase):
 
-    # TEST RECORD PERCEPTS # 10 PTS
-    @weight(2)
+    # TEST RECORD PERCEPTS # 5 PTS
+    @weight(1)
     def test_record_percepts_stench(self):
         w = WampaWorld(S1)
         w.agent.record_percepts(['stench', 'breeze', 'gasp', 'bump', 'scream'], (9, 9))
         self.assertEqual(w.agent.KB.stench, {(9, 9)}, msg = "Expected KB.stench to have room with stench in it after stench is perceived")
 
-    @weight(2)
+    @weight(1)
     def test_record_percepts_breeze(self):
         w = WampaWorld(S1)
         w.agent.record_percepts(['stench', 'breeze', 'gasp', 'bump', 'scream'], (9, 9))
         self.assertEqual(w.agent.KB.breeze, {(9, 9)}, msg = "Expected KB.breeze to have room with breeze in it after breeze is perceived")
 
-    @weight(2)
+    @weight(1)
     def test_record_percepts_gasp(self):
         w = WampaWorld(S1)
         w.agent.record_percepts(['stench', 'breeze', 'gasp', 'bump', 'scream'], (9, 9))
         self.assertEqual(w.agent.KB.gasp, True, msg = "Expected KB.gasp to be True after gasp is perceived")
 
-    @weight(2)
+    @weight(1)
     def test_record_percepts_bump(self):
         w = WampaWorld(S1)
         w.agent.record_percepts(['stench', 'breeze', 'gasp', 'bump', 'scream'], (9, 9))
         self.assertEqual(w.agent.KB.bump, {(9, 9): "up"}, msg = "Expected KB.bump to have room with bump in it after bump is perceived")
 
-    @weight(2)
+    @weight(1)
     def test_record_percepts_scream(self):
         w = WampaWorld(S1)
         w.agent.record_percepts(['stench', 'breeze', 'gasp', 'bump', 'scream'], (9, 9))
@@ -386,8 +386,12 @@ class TestSolution(unittest.TestCase):
         w.take_action("forward")
         w.agent.record_percepts(w.get_percepts(), w.agent.loc)
         student_actions = w.agent.all_safe_next_actions()
+        left_in_student_actions = True if "left" in student_actions else False
+        right_in_student_actions = True if "right" in student_actions else False
         forward_in_student_actions = True if "forward" in student_actions else False
         self.assertFalse(forward_in_student_actions, msg = "Expected 'forward' not to be in safe actions after 'forward' from initial position on S1.")
+        self.assertTrue(left_in_student_actions, msg = "Expected 'left' to be in safe actions since left is always a safe action.")
+        self.assertTrue(right_in_student_actions, msg = "Expected 'right' to be in safe actions since right is always a safe action.")
 
 
     # TEST FULL SOLUTIONS # 30 PTS

@@ -2,6 +2,7 @@ from random import shuffle
 from itertools import combinations as comb
 from utils import flatten, get_direction, is_facing_wampa
 
+
 # KNOWLEDGE BASE
 class KB:
     def __init__(self, agent):
@@ -18,21 +19,22 @@ class KB:
         self.wampa = set()  # room (x, y) that is known to be the Wampa
         self.luke = None  # room (x, y) that is known to be Luke
 
+
 # AGENT
 class Agent:
     def __init__(self, world):
         self.world = world
-        self.loc = (0,0)
+        self.loc = (0, 0)
         self.score = 0
         self.degrees = 0
         self.blaster = True
         self.has_luke = False
         self.percepts = ['stench', 'breeze', 'gasp', 'bump', 'scream']
         self.orientation_to_delta = {
-        "up": (0, 1),  # (dx, dy)
-        "down": (0, -1),
-        "left": (-1, 0),
-        "right": (1, 0)
+            "up": (0, 1),  # (dx, dy)
+            "down": (0, -1),
+            "left": (-1, 0),
+            "right": (1, 0)
         }
         self.KB = KB(self)
 
@@ -64,7 +66,7 @@ class Agent:
         }
         for percept in present_percepts:
             percept_to_process[percept]()
-        
+
         self.KB.visited_rooms.add(self.loc)
         self.KB.all_rooms.update(self.adjacent_rooms(self.loc))
 
@@ -86,7 +88,7 @@ class Agent:
 
         You may find the utils.flatten(tup) method useful here for flattening
         wampa_room from a tuple of tuples into a tuple.
-        
+
         The output of this function will be queried to find the model of the
         query, and will be checked for consistency with the KB
         to find the model of the KB."""
@@ -103,7 +105,7 @@ class Agent:
             # if wampa_room != pit_room or wampa_room is empty
             if flatten(wampa_room) not in pit_rooms or wampa_room == ()
         )
-    
+
     def pit_room_is_consistent_with_KB(self, room):
         """Return True if the room could be a pit given breeze in KB, False
         otherwise. A room could be a pit if all adjacent rooms that have been
@@ -112,10 +114,10 @@ class Agent:
         in them. This will be used to find the model of the KB."""
         if room == tuple():  # It is possible that there are no pits
             return not self.KB.breeze  # if no breeze has been perceived yet
-        
+
         return all(room in self.KB.breeze or room not in self.KB.visited_rooms
                    for room in self.adjacent_rooms(room))
-    
+
     def wampa_room_is_consistent_with_KB(self, room):
         """Return True if the room could be a wampa given stench in KB, False
         otherwise. A room could be a wampa if all adjacent rooms that have been
@@ -137,10 +139,10 @@ class Agent:
         and all pit rooms are consistent with the KB."""
 
         return {(p, w) for p, w in possible_worlds if
-                self.wampa_room_is_consistent_with_KB(w) and 
+                self.wampa_room_is_consistent_with_KB(w) and
                 (all(self.pit_room_is_consistent_with_KB(room) for room in p)
-                if p else self.pit_room_is_consistent_with_KB(p))}  #  empty p
-    
+                if p else self.pit_room_is_consistent_with_KB(p))}  # empty p
+
     def find_model_of_query(self, query, room, possible_worlds):
         """Where query can be "pit_in_room", "wampa_in_room", "no_pit_in_room"
         or "no_wampa_in_room",filter the set of worlds
@@ -207,7 +209,7 @@ class Agent:
         if self.KB.scream:
             self.KB.wampa = set()
             self.KB.stench.clear()
-        
+
         # initialize our four queries and sets to store where the query is true
         pit_in_room = set()
         wampa_in_room = set()
@@ -221,7 +223,7 @@ class Agent:
         # enumerate possible worlds and find the model of the KB
         possible_worlds = self.enumerate_possible_worlds()
         model_of_KB = self.find_model_of_KB(possible_worlds)
-        
+
         # for each query in each adj. room, find the model of the query
         # and check if query is entailed by KB
         for adj_room in self.adjacent_rooms(self.loc):
@@ -237,7 +239,7 @@ class Agent:
         self.KB.wampa = wampa_in_room.pop() if len(wampa_in_room) == 1 \
             else set()
         self.KB.pits.update(pit_in_room)
-        
+
     def all_safe_next_actions(self):
         """Define R2D2's valid and safe next actions based on his current
         location and knowledge of the environment."""
@@ -246,7 +248,7 @@ class Agent:
         dx, dy = self.orientation_to_delta[get_direction(self.degrees)]
         forward_room = (x+dx, y+dy)
         if forward_room in self.KB.safe_rooms and \
-            forward_room not in self.KB.walls:
+                forward_room not in self.KB.walls:
             actions.append('forward')
         if self.blaster and is_facing_wampa(self):
             actions.append('shoot')
@@ -279,12 +281,13 @@ class Agent:
         forward_room = (x+dx, y+dy)
         if 'forward' in actions and \
             (forward_room not in self.KB.visited_rooms or
-            (self.has_luke and (dx == -1 or dy == -1))):
+                (self.has_luke and (dx == -1 or dy == -1))):
             return 'forward'
         else:
             shuffle(actions)
             return actions.pop()
-        
+
+
 # Approximately how many hours did you spend on this assignment?
 feedback_question_1 = 99
 
