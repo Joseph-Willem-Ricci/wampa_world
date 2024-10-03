@@ -123,7 +123,7 @@ class Agent:
 
     def find_model_of_query(self, query, room, possible_worlds):
         """Where query can be "pit_in_room", "wampa_in_room", "no_pit_in_room"
-        or "no_wampa_in_room",filter the set of worlds
+        or "no_wampa_in_room", filter the set of worlds
         according to the query and room."""
         # TODO:
         ...
