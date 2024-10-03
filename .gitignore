@@ -2,3 +2,5 @@ autograder/source/tests/__pycache__
 solution/__pycache__
 skeleton/__pycache__
 autograder/source/*.zip
+*.zip
+.vscode

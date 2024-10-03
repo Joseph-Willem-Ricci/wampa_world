@@ -154,7 +154,6 @@ class WampaWorld:
 # RUN THE GAME
 def run_game(scenario):
     w = WampaWorld(scenario)
-    is_playing = True
     while w.is_playing:
         visualize_world(w, w.agent.loc, get_direction(w.agent.degrees))
         percepts = w.get_percepts()
