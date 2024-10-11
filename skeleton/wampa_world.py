@@ -91,7 +91,7 @@ class WampaWorld:
                 self.agent.score -= 1000
                 print("R2-D2 has been crushed, -1000 points")
                 print("Your final score is: ", self.agent.score)
-                self.is_playing
+                self.is_playing = False
             
             percepts = self.get_percepts()
             percepts[3] = "bump" if not moved else None  # reset bump = None if no bump
