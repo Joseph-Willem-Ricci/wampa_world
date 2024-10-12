@@ -16,7 +16,7 @@ class KB:
         self.scream = False  # True if scream has been perceived
         self.walls = set()  # set of rooms (x, y) that are known to be walls
         self.pits = set()  # set of rooms (x, y) that are known to be pits
-        self.wampa = set()  # room (x, y) that is known to be the Wampa
+        self.wampa = None  # room (x, y) that is known to be the Wampa
         self.luke = None  # room (x, y) that is known to be Luke
 
 
