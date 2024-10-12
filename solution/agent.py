@@ -16,7 +16,7 @@ class KB:
         self.scream = False  # True if scream has been perceived
         self.walls = set()  # set of rooms (x, y) that are known to be walls
         self.pits = set()  # set of rooms (x, y) that are known to be pits
-        self.wampa = set()  # room (x, y) that is known to be the Wampa
+        self.wampa = None  # room (x, y) that is known to be the Wampa
         self.luke = None  # room (x, y) that is known to be Luke
 
 
@@ -207,7 +207,7 @@ class Agent:
         if self.KB.gasp:
             self.KB.luke = self.loc
         if self.KB.scream:
-            self.KB.wampa = set()
+            self.KB.wampa = None
             self.KB.stench.clear()
 
         # initialize our four queries and sets to store where the query is true
@@ -236,8 +236,7 @@ class Agent:
         # update KB.safe_rooms, KB.wampa and KB.pits based on new information
         safe_adjacent_rooms = no_pit_in_room.intersection(no_wampa_in_room)
         self.KB.safe_rooms.update(safe_adjacent_rooms)
-        self.KB.wampa = wampa_in_room.pop() if len(wampa_in_room) == 1 \
-            else set()
+        self.KB.wampa = wampa_in_room.pop() if wampa_in_room else None
         self.KB.pits.update(pit_in_room)
 
     def all_safe_next_actions(self):
