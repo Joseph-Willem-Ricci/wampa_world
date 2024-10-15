@@ -17,35 +17,35 @@ class TestSolution(unittest.TestCase):
     @timeout_decorator.timeout(12)
     def test_record_percepts_stench(self):
         w = WampaWorld(S1)
-        w.agent.record_percepts(['stench', 'breeze', 'gasp', 'bump', 'scream'], (9, 9))
+        w.agent.record_percepts(['stench', None, None, None, None], (9, 9))
         self.assertEqual(w.agent.KB.stench, {(9, 9)}, msg = "Expected KB.stench to have room with stench in it after stench is perceived")
 
     @weight(1)
     @timeout_decorator.timeout(12)
     def test_record_percepts_breeze(self):
         w = WampaWorld(S1)
-        w.agent.record_percepts(['stench', 'breeze', 'gasp', 'bump', 'scream'], (9, 9))
+        w.agent.record_percepts([None, 'breeze', None, None, None], (9, 9))
         self.assertEqual(w.agent.KB.breeze, {(9, 9)}, msg = "Expected KB.breeze to have room with breeze in it after breeze is perceived")
 
     @weight(1)
     @timeout_decorator.timeout(12)
     def test_record_percepts_gasp(self):
         w = WampaWorld(S1)
-        w.agent.record_percepts(['stench', 'breeze', 'gasp', 'bump', 'scream'], (9, 9))
+        w.agent.record_percepts([None, None, 'gasp', None, None], (9, 9))
         self.assertEqual(w.agent.KB.gasp, True, msg = "Expected KB.gasp to be True after gasp is perceived")
 
     @weight(1)
     @timeout_decorator.timeout(12)
     def test_record_percepts_bump(self):
         w = WampaWorld(S1)
-        w.agent.record_percepts(['stench', 'breeze', 'gasp', 'bump', 'scream'], (9, 9))
+        w.agent.record_percepts([None, None, None, 'bump', None], (9, 9))
         self.assertEqual(w.agent.KB.bump, {(9, 9): "up"}, msg = "Expected KB.bump to have room with bump in it after bump is perceived")
 
     @weight(1)
     @timeout_decorator.timeout(12)
     def test_record_percepts_scream(self):
         w = WampaWorld(S1)
-        w.agent.record_percepts(['stench', 'breeze', 'gasp', 'bump', 'scream'], (9, 9))
+        w.agent.record_percepts([None, None, None, None, 'scream'], (9, 9))
         self.assertEqual(w.agent.KB.scream, True, msg = "Expected KB.scream to be True after scream is perceived")
 
 
