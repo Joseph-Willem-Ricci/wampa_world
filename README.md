@@ -37,7 +37,7 @@ Input: `(2, 3)`
 
 Expected output: `{(1, 3), (3, 3), (2, 2), (2, 4)}`
 
-`record_percepts(self, sensed_percepts, current_location):`
+`record_percepts(self, sensed_percepts):`
 - Update the percepts in agent's KB with the percepts sensed in the current location, and update visited_rooms and all_rooms accordingly.
 
 `enumerate_possible_worlds(self)`
