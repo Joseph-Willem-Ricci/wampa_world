@@ -62,7 +62,7 @@ class Agent:
 
     def enumerate_possible_worlds(self):
         """Return the set of all possible worlds, where a possible world is a
-        tuple of (pit_rooms, wampa_room), pit_rooms is a tuple of tuples
+        tuple of (pit_rooms, wampa_room), pit_rooms is a frozenset of tuples
         representing possible pit rooms, and wampa_room is a tuple representing
         a possible wampa room.
 
@@ -71,7 +71,8 @@ class Agent:
         have a pit or a wampa, we first want to find that set. To do that,
         subtract the set of rooms that you know cannot have a pit or wampa from
         the set of all rooms. For example, you know that a room with a wall
-        cannot have a pit or wampa.
+        cannot have a pit or wampa. A world with no pits or wampas is
+        represented by (frozenset(), tuple())
 
         Then use itertools.combinations to return the set of possible worlds,
         or all combinations of possible pit and wampa locations.
@@ -92,7 +93,7 @@ class Agent:
         visited have had breeze perceived in them. A room cannot be a pit if
         any adjacent rooms that have been visited have not had breeze perceived
         in them. This will be used to find the model of the KB."""
-        if pit_room == tuple():  # It is possible that there are no pits
+        if pit_room == frozenset():  # It is possible that there are no pits
             return not self.KB.breeze  # if no breeze has been perceived yet
         # TODO:
         ...
@@ -115,7 +116,7 @@ class Agent:
     def find_model_of_KB(self, possible_worlds):
         """Return the subset of all possible worlds consistent with KB.
         possible_worlds is a set of tuples (pit_rooms, wampa_room),
-        pit_rooms is a set of tuples of possible pit rooms,
+        pit_rooms is a frozenset of tuples of possible pit rooms,
         and wampa_room is a tuple representing a possible wampa room.
         A world is consistent with the KB if wampa_room is consistent
         and all pit rooms are consistent with the KB."""
@@ -125,7 +126,7 @@ class Agent:
 
     def find_model_of_query(self, query, room, possible_worlds):
         """Where query can be "pit_in_room", "wampa_in_room", "no_pit_in_room"
-        or "no_wampa_in_room", filter the set of worlds
+        or "no_wampa_in_room", filter the set of possible worlds
         according to the query and room."""
         # TODO:
         ...
