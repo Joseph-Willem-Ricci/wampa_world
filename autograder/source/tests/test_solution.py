@@ -94,7 +94,7 @@ class TestSolution(unittest.TestCase):
         self.assertEqual(student_possible_worlds, solution_possible_worlds, msg = "Expected possible worlds after 'forward' from initial position on S1 to be as shown in README.")
 
     @weight(4)
-    @timeout_decorator.timeout(12)  # TODO: BEGIN TESTING AGAIN HERE
+    @timeout_decorator.timeout(12)
     def test_enumerate_possible_worlds_3(self):
         w = WampaWorld(S1)
         w.agent.loc = (1, 0)
@@ -103,7 +103,7 @@ class TestSolution(unittest.TestCase):
         w.agent.KB.stench = {(0, 1)}
         w.agent.KB.breeze = {(1, 0)}
         w.agent.KB.visited_rooms = {(0, 0), (1, 0), (0, 1)}
-        w.agent.KB.bump.update({(1, 0): "down"}, {(0, 0), "left"})
+        w.agent.KB.bump.update({(1, 0): "down", (0, 0): "left"})
         w.agent.infer_wall_locations()
         student_possible_worlds = w.agent.enumerate_possible_worlds()
         is_any_room_negative = False
@@ -176,9 +176,9 @@ class TestSolution(unittest.TestCase):
         student_possible_worlds = w.agent.enumerate_possible_worlds()
         student_model_of_KB = w.agent.find_model_of_KB(student_possible_worlds)
         solution_model_of_KB = {
-            ((), (-1, 1)),
-            ((), (0, 2)),
-            ((), (1, 1))
+            (frozenset(), (-1, 1)),
+            (frozenset(), (0, 2)),
+            (frozenset(), (1, 1))
         }
         self.assertEqual(student_model_of_KB, solution_model_of_KB, msg = "Expected model of KB after 'forward' from initial position on S1 to be as shown in README.")
 
@@ -194,12 +194,12 @@ class TestSolution(unittest.TestCase):
         student_possible_worlds = w.agent.enumerate_possible_worlds()
         student_model_of_KB = w.agent.find_model_of_KB(student_possible_worlds)
         solution_model_of_KB = {
-            (((1, -1),), (-1, 1)),
-            (((1, -1),), (0, 2)),
-            (((2, 0),), (-1, 1)),
-            (((2, 0),), (0, 2)),
-            (((2, 0), (1, -1)), (-1, 1)),
-            (((2, 0), (1, -1)), (0, 2))
+            (frozenset({(1, -1)}), (-1, 1)),
+            (frozenset({(1, -1)}), (0, 2)),
+            (frozenset({(2, 0)}), (-1, 1)),
+            (frozenset({(2, 0)}), (0, 2)),
+            (frozenset({(2, 0), (1, -1)}), (-1, 1)),
+            (frozenset({(2, 0), (1, -1)}), (0, 2))
         }
         self.assertEqual(student_model_of_KB, solution_model_of_KB, msg = "Expected model of KB after visiting (0, 0), (1, 0) and (0, 1) on S1 with no bumps to be as shown in README.")
 
@@ -226,7 +226,7 @@ class TestSolution(unittest.TestCase):
         student_possible_worlds = w.agent.enumerate_possible_worlds()
         student_model_of_KB = w.agent.find_model_of_KB(student_possible_worlds)
         solution_model_of_KB = {
-            (((2, 0),), (0, 2))
+            (frozenset({(2, 0)}), (0, 2))
         }
         self.assertEqual(student_model_of_KB, solution_model_of_KB, msg = "Expected model of KB after visiting (0, 0), (1, 0) and (0, 1) on S1 with bumps perceived down and left to be {(((2, 0),), (0, 2))}.")
 
@@ -234,39 +234,41 @@ class TestSolution(unittest.TestCase):
     # TEST MODEL OF QUERY # 15 PTS
     @weight(4)
     @timeout_decorator.timeout(12)
-    def test_model_of_query_1(self):  # NOTE: This test case relies on tuple order.
+    def test_model_of_query_1(self):
         w = WampaWorld(S1)
         a = Agent(w)
         possible_worlds = {
-            ((), ()),
-            ((), (-1, 1)),
-            ((), (0, 2)),
-            ((), (1, 1)),
-            (((-1, 1),), ()),
-            (((-1, 1),), (0, 2)),
-            (((-1, 1),), (1, 1)),
-            (((-1, 1), (0, 2)), ()),
-            (((-1, 1), (0, 2)), (1, 1)),
-            (((-1, 1), (1, 1)), ()),
-            (((-1, 1), (1, 1)), (0, 2)),
-            (((-1, 1), (1, 1), (0, 2)), ()),
-            (((0, 2),), ()),
-            (((0, 2),), (-1, 1)),
-            (((0, 2),), (1, 1)),
-            (((1, 1),), ()),
-            (((1, 1),), (-1, 1)),
-            (((1, 1),), (0, 2)),
-            (((1, 1), (0, 2)), ()),
-            (((1, 1), (0, 2)), (-1, 1))
+            (frozenset(), ()),
+            (frozenset(), (-1, 1)),
+            (frozenset(), (0, 2)),
+            (frozenset(), (1, 1)),
+            (frozenset({(-1, 1)}), ()),
+            (frozenset({(-1, 1)}), (0, 2)),
+            (frozenset({(-1, 1)}), (1, 1)),
+            (frozenset({(-1, 1), (0, 2)}), ()),
+            (frozenset({(-1, 1), (0, 2)}), (1, 1)),
+            (frozenset({(-1, 1), (1, 1)}), ()),
+            (frozenset({(-1, 1), (1, 1)}), (0, 2)),
+            (frozenset({(-1, 1), (1, 1), (0, 2)}), ()),
+            (frozenset({(0, 2)}), ()),
+            (frozenset({(0, 2)}), (-1, 1)),
+            (frozenset({(0, 2)}), (1, 1)),
+            (frozenset({(1, 1)}), ()),
+            (frozenset({(1, 1)}), (-1, 1)),
+            (frozenset({(1, 1)}), (0, 2)),
+            (frozenset({(1, 1), (0, 2)}), ()),
+            (frozenset({(1, 1), (0, 2)}), (-1, 1))
         }
+
         solution_model_of_query = {
-            ((), (0, 2)),
-            (((-1, 1),), (0, 2)),
-            (((-1, 1), (1, 1)), (0, 2)),
-            (((1, 1),), (0, 2))
+            (frozenset(), (0, 2)),
+            (frozenset({(-1, 1)}), (0, 2)),
+            (frozenset({(-1, 1), (1, 1)}), (0, 2)),
+            (frozenset({(1, 1)}), (0, 2))
         }
+
         student_model_of_query = a.find_model_of_query("wampa_in_room", (0, 2), possible_worlds)
-        self.assertEqual(student_model_of_query, solution_model_of_query, msg = "Expected model of query 'wampa_in_room', (0, 2) the state in S1 as shown in README to be as shown in README.")
+        self.assertEqual(student_model_of_query, solution_model_of_query, msg = "Expected model of query 'wampa_in_room', (0, 2) the state in S1 as shown in README to be as shown.")
 
     @weight(4)
     @timeout_decorator.timeout(12)
@@ -301,85 +303,89 @@ class TestSolution(unittest.TestCase):
 
     @weight(4)
     @timeout_decorator.timeout(12)
-    def test_model_of_query_3(self):  # NOTE: This test relies on tuple order.
+    def test_model_of_query_3(self):
         w = WampaWorld(S1)
         a = Agent(w)
         possible_worlds = {
-            ((), ()),
-            ((), (-1, 1)),
-            ((), (0, 2)),
-            ((), (1, 1)),
-            (((-1, 1),), ()),
-            (((-1, 1),), (0, 2)),
-            (((-1, 1),), (1, 1)),
-            (((-1, 1), (0, 2)), ()),
-            (((-1, 1), (0, 2)), (1, 1)),
-            (((-1, 1), (1, 1)), ()),
-            (((-1, 1), (1, 1)), (0, 2)),
-            (((-1, 1), (1, 1), (0, 2)), ()),
-            (((0, 2),), ()),
-            (((0, 2),), (-1, 1)),
-            (((0, 2),), (1, 1)),
-            (((1, 1),), ()),
-            (((1, 1),), (-1, 1)),
-            (((1, 1),), (0, 2)),
-            (((1, 1), (0, 2)), ()),
-            (((1, 1), (0, 2)), (-1, 1))
+            (frozenset(), ()),
+            (frozenset(), (-1, 1)),
+            (frozenset(), (0, 2)),
+            (frozenset(), (1, 1)),
+            (frozenset({(-1, 1)}), ()),
+            (frozenset({(-1, 1)}), (0, 2)),
+            (frozenset({(-1, 1)}), (1, 1)),
+            (frozenset({(-1, 1), (0, 2)}), ()),
+            (frozenset({(-1, 1), (0, 2)}), (1, 1)),
+            (frozenset({(-1, 1), (1, 1)}), ()),
+            (frozenset({(-1, 1), (1, 1)}), (0, 2)),
+            (frozenset({(-1, 1), (1, 1), (0, 2)}), ()),
+            (frozenset({(0, 2)}), ()),
+            (frozenset({(0, 2)}), (-1, 1)),
+            (frozenset({(0, 2)}), (1, 1)),
+            (frozenset({(1, 1)}), ()),
+            (frozenset({(1, 1)}), (-1, 1)),
+            (frozenset({(1, 1)}), (0, 2)),
+            (frozenset({(1, 1), (0, 2)}), ()),
+            (frozenset({(1, 1), (0, 2)}), (-1, 1))
         }
+
         solution_model_of_query = {
-            (((-1, 1), (0, 2)), ()),
-            (((-1, 1), (0, 2)), (1, 1)),
-            (((-1, 1), (1, 1), (0, 2)), ()),
-            (((0, 2),), ()),
-            (((0, 2),), (-1, 1)),
-            (((0, 2),), (1, 1)),
-            (((1, 1), (0, 2)), ()),
-            (((1, 1), (0, 2)), (-1, 1))
+            (frozenset({(-1, 1), (0, 2)}), ()),
+            (frozenset({(-1, 1), (0, 2)}), (1, 1)),
+            (frozenset({(-1, 1), (1, 1), (0, 2)}), ()),
+            (frozenset({(0, 2)}), ()),
+            (frozenset({(0, 2)}), (-1, 1)),
+            (frozenset({(0, 2)}), (1, 1)),
+            (frozenset({(1, 1), (0, 2)}), ()),
+            (frozenset({(1, 1), (0, 2)}), (-1, 1))
         }
+
         student_model_of_query = a.find_model_of_query("pit_in_room", (0, 2), possible_worlds)
         self.assertEqual(student_model_of_query, solution_model_of_query, msg = "Expected all worlds in model of query 'pit_in_room', (0, 2) in step 1 on S1 as shown in the README to include (0, 2) as a pit room")
 
     @weight(3)
     @timeout_decorator.timeout(12)
-    def test_model_of_query_4(self):  # NOTE: This test relies on tuple order.
+    def test_model_of_query_4(self):
         w = WampaWorld(S1)
         a = Agent(w)
         possible_worlds = {
-            ((), ()),
-            ((), (-1, 1)),
-            ((), (0, 2)),
-            ((), (1, 1)),
-            (((-1, 1),), ()),
-            (((-1, 1),), (0, 2)),
-            (((-1, 1),), (1, 1)),
-            (((-1, 1), (0, 2)), ()),
-            (((-1, 1), (0, 2)), (1, 1)),
-            (((-1, 1), (1, 1)), ()),
-            (((-1, 1), (1, 1)), (0, 2)),
-            (((-1, 1), (1, 1), (0, 2)), ()),
-            (((0, 2),), ()),
-            (((0, 2),), (-1, 1)),
-            (((0, 2),), (1, 1)),
-            (((1, 1),), ()),
-            (((1, 1),), (-1, 1)),
-            (((1, 1),), (0, 2)),
-            (((1, 1), (0, 2)), ()),
-            (((1, 1), (0, 2)), (-1, 1))
+            (frozenset(), ()),
+            (frozenset(), (-1, 1)),
+            (frozenset(), (0, 2)),
+            (frozenset(), (1, 1)),
+            (frozenset({(-1, 1)}), ()),
+            (frozenset({(-1, 1)}), (0, 2)),
+            (frozenset({(-1, 1)}), (1, 1)),
+            (frozenset({(-1, 1), (0, 2)}), ()),
+            (frozenset({(-1, 1), (0, 2)}), (1, 1)),
+            (frozenset({(-1, 1), (1, 1)}), ()),
+            (frozenset({(-1, 1), (1, 1)}), (0, 2)),
+            (frozenset({(-1, 1), (1, 1), (0, 2)}), ()),
+            (frozenset({(0, 2)}), ()),
+            (frozenset({(0, 2)}), (-1, 1)),
+            (frozenset({(0, 2)}), (1, 1)),
+            (frozenset({(1, 1)}), ()),
+            (frozenset({(1, 1)}), (-1, 1)),
+            (frozenset({(1, 1)}), (0, 2)),
+            (frozenset({(1, 1), (0, 2)}), ()),
+            (frozenset({(1, 1), (0, 2)}), (-1, 1))
         }
+
         solution_model_of_query = {
-            ((), ()),
-            ((), (-1, 1)),
-            ((), (0, 2)),
-            ((), (1, 1)),
-            (((-1, 1),), ()),
-            (((-1, 1),), (0, 2)),
-            (((-1, 1),), (1, 1)),
-            (((-1, 1), (1, 1)), ()),
-            (((-1, 1), (1, 1)), (0, 2)),
-            (((1, 1),), ()),
-            (((1, 1),), (-1, 1)),
-            (((1, 1),), (0, 2))
+            (frozenset(), ()),
+            (frozenset(), (-1, 1)),
+            (frozenset(), (0, 2)),
+            (frozenset(), (1, 1)),
+            (frozenset({(-1, 1)}), ()),
+            (frozenset({(-1, 1)}), (0, 2)),
+            (frozenset({(-1, 1)}), (1, 1)),
+            (frozenset({(-1, 1), (1, 1)}), ()),
+            (frozenset({(-1, 1), (1, 1)}), (0, 2)),
+            (frozenset({(1, 1)}), ()),
+            (frozenset({(1, 1)}), (-1, 1)),
+            (frozenset({(1, 1)}), (0, 2))
         }
+
         student_model_of_query = a.find_model_of_query("no_pit_in_room", (0, 2), possible_worlds)
         self.assertEqual(student_model_of_query, solution_model_of_query)
 
