@@ -4,3 +4,4 @@ skeleton/__pycache__
 autograder/source/*.zip
 *.zip
 .vscode
+autograder/source/tests/agent.py

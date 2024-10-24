@@ -72,7 +72,7 @@ class Agent:
 
     def enumerate_possible_worlds(self):
         """Return the set of all possible worlds, where a possible world is a
-        tuple of (pit_rooms, wampa_room), pit_rooms is a tuple of tuples
+        tuple of (pit_rooms, wampa_room), pit_rooms is a frozenset of tuples
         representing possible pit rooms, and wampa_room is a tuple representing
         a possible wampa room.
 
@@ -81,7 +81,8 @@ class Agent:
         have a pit or a wampa, we first want to find that set. To do that,
         subtract the set of rooms that you know cannot have a pit or wampa from
         the set of all rooms. For example, you know that a room with a wall
-        cannot have a pit or wampa.
+        cannot have a pit or wampa. A world with no pits or wampas is
+        represented by (frozenset(), tuple())
 
         Then use itertools.combinations to return the set of possible worlds,
         or all combinations of possible pit and wampa locations.
@@ -97,7 +98,7 @@ class Agent:
         could_be_pit_or_wampa = self.KB.all_rooms - is_not_pit_or_wampa
         n = len(could_be_pit_or_wampa)
         return set(
-            (pit_rooms, flatten(wampa_room))  # return all possible worlds
+            (frozenset(pit_rooms), flatten(wampa_room))  # return worlds
             for num_pits in range(n + 1)      # with 0 to n pits
             for num_wampas in range(2)        # with 0 or 1 wampas
             for pit_rooms in comb(could_be_pit_or_wampa, num_pits)
@@ -112,7 +113,7 @@ class Agent:
         visited have had breeze perceived in them. A room cannot be a pit if
         any adjacent rooms that have been visited have not had breeze perceived
         in them. This will be used to find the model of the KB."""
-        if room == tuple():  # It is possible that there are no pits
+        if room == frozenset():  # It is possible that there are no pits
             return not self.KB.breeze  # if no breeze has been perceived yet
 
         return all(room in self.KB.breeze or room not in self.KB.visited_rooms
