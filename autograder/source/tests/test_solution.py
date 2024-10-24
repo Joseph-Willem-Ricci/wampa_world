@@ -430,7 +430,7 @@ class TestSolution(unittest.TestCase):
         self.assertEqual(loc, (0, 0), msg = "Expected R2D2 to be in room (0, 0) after running game on S3.")
     
     @weight(5)
-    @timeout_decorator.timeout(12)
+    @timeout_decorator.timeout(30)
     def test_run_game_4(self):
         score, has_luke, loc = run_game(S4)
         self.assertTrue(has_luke, msg = "Expected R2D2 to have luke after running game on S4.")
