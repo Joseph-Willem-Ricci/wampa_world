@@ -17,35 +17,35 @@ class TestSolution(unittest.TestCase):
     @timeout_decorator.timeout(12)
     def test_record_percepts_stench(self):
         w = WampaWorld(S1)
-        w.agent.record_percepts(['stench', None, None, None, None], (9, 9))
-        self.assertEqual(w.agent.KB.stench, {(9, 9)}, msg = "Expected KB.stench to have room with stench in it after stench is perceived")
+        w.agent.record_percepts(['stench', None, None, None, None])
+        self.assertEqual(w.agent.KB.stench, {(0, 0)}, msg = "Expected KB.stench to have room with stench in it after stench is perceived")
 
     @weight(1)
     @timeout_decorator.timeout(12)
     def test_record_percepts_breeze(self):
         w = WampaWorld(S1)
-        w.agent.record_percepts([None, 'breeze', None, None, None], (9, 9))
-        self.assertEqual(w.agent.KB.breeze, {(9, 9)}, msg = "Expected KB.breeze to have room with breeze in it after breeze is perceived")
+        w.agent.record_percepts([None, 'breeze', None, None, None])
+        self.assertEqual(w.agent.KB.breeze, {(0, 0)}, msg = "Expected KB.breeze to have room with breeze in it after breeze is perceived")
 
     @weight(1)
     @timeout_decorator.timeout(12)
     def test_record_percepts_gasp(self):
         w = WampaWorld(S1)
-        w.agent.record_percepts([None, None, 'gasp', None, None], (9, 9))
+        w.agent.record_percepts([None, None, 'gasp', None, None])
         self.assertEqual(w.agent.KB.gasp, True, msg = "Expected KB.gasp to be True after gasp is perceived")
 
     @weight(1)
     @timeout_decorator.timeout(12)
     def test_record_percepts_bump(self):
         w = WampaWorld(S1)
-        w.agent.record_percepts([None, None, None, 'bump', None], (9, 9))
-        self.assertEqual(w.agent.KB.bump, {(9, 9): "up"}, msg = "Expected KB.bump to have room with bump in it after bump is perceived")
+        w.agent.record_percepts([None, None, None, 'bump', None])
+        self.assertEqual(w.agent.KB.bump, {(0, 0): "up"}, msg = "Expected KB.bump to have room with bump in it after bump is perceived")
 
     @weight(1)
     @timeout_decorator.timeout(12)
     def test_record_percepts_scream(self):
         w = WampaWorld(S1)
-        w.agent.record_percepts([None, None, None, None, 'scream'], (9, 9))
+        w.agent.record_percepts([None, None, None, None, 'scream'])
         self.assertEqual(w.agent.KB.scream, True, msg = "Expected KB.scream to be True after scream is perceived")
 
 
@@ -120,11 +120,11 @@ class TestSolution(unittest.TestCase):
     @timeout_decorator.timeout(12)
     def test_pit_room_is_consistent_with_KB_1(self):
         w = WampaWorld(S1)
-        w.agent.record_percepts(w.get_percepts(), w.agent.loc)
+        w.agent.record_percepts(w.get_percepts())
         w.take_action("forward")
-        w.agent.record_percepts(w.get_percepts(), w.agent.loc)
+        w.agent.record_percepts(w.get_percepts())
         w.agent.loc = (1, 0)
-        w.agent.record_percepts(w.get_percepts(), w.agent.loc)
+        w.agent.record_percepts(w.get_percepts())
         student_check = w.agent.pit_room_is_consistent_with_KB((2, 0))
         self.assertTrue(student_check, msg = "On S1, after visiting (0, 0), (1, 0) and (0, 1), expected pit_room_is_consistent_with_KB((2, 0)) to be True.")
 
@@ -132,11 +132,11 @@ class TestSolution(unittest.TestCase):
     @timeout_decorator.timeout(12)
     def test_pit_room_is_consistent_with_KB_2(self):
         w = WampaWorld(S1)
-        w.agent.record_percepts(w.get_percepts(), w.agent.loc)
+        w.agent.record_percepts(w.get_percepts())
         w.take_action("forward")
-        w.agent.record_percepts(w.get_percepts(), w.agent.loc)
+        w.agent.record_percepts(w.get_percepts())
         w.agent.loc = (1, 0)
-        w.agent.record_percepts(w.get_percepts(), w.agent.loc)
+        w.agent.record_percepts(w.get_percepts())
         student_check = w.agent.pit_room_is_consistent_with_KB((1, 1))
         self.assertFalse(student_check, msg = "On S1, after visiting (0, 0), (1, 0) and (0, 1), expected pit_room_is_consistent_with_KB((1, 1)) to be False.")
 
@@ -144,11 +144,11 @@ class TestSolution(unittest.TestCase):
     @timeout_decorator.timeout(12)
     def test_wampa_room_is_consistent_with_KB_1(self):
         w = WampaWorld(S1)
-        w.agent.record_percepts(w.get_percepts(), w.agent.loc)
+        w.agent.record_percepts(w.get_percepts())
         w.take_action("forward")
-        w.agent.record_percepts(w.get_percepts(), w.agent.loc)
+        w.agent.record_percepts(w.get_percepts())
         w.agent.loc = (1, 0)
-        w.agent.record_percepts(w.get_percepts(), w.agent.loc)
+        w.agent.record_percepts(w.get_percepts())
         student_check = w.agent.wampa_room_is_consistent_with_KB((0, 2))
         self.assertTrue(student_check, msg = "On S1, after visiting (0, 0), (1, 0) and (0, 1), expected wampa_room_is_consistent_with_KB((0, 2)) to be True.")
 
@@ -156,11 +156,11 @@ class TestSolution(unittest.TestCase):
     @timeout_decorator.timeout(12)
     def test_wampa_room_is_consistent_with_KB_2(self):
         w = WampaWorld(S1)
-        w.agent.record_percepts(w.get_percepts(), w.agent.loc)
+        w.agent.record_percepts(w.get_percepts())
         w.take_action("forward")
-        w.agent.record_percepts(w.get_percepts(), w.agent.loc)
+        w.agent.record_percepts(w.get_percepts())
         w.agent.loc = (1, 0)
-        w.agent.record_percepts(w.get_percepts(), w.agent.loc)
+        w.agent.record_percepts(w.get_percepts())
         student_check = w.agent.wampa_room_is_consistent_with_KB((1, 1))
         self.assertFalse(student_check, msg = "On S1, after visiting (0, 0), (1, 0) and (0, 1), expected wampa_room_is_consistent_with_KB((1, 1)) to be False.")
 
@@ -170,9 +170,9 @@ class TestSolution(unittest.TestCase):
     @timeout_decorator.timeout(12)
     def test_model_of_KB_1(self):
         w = WampaWorld(S1)
-        w.agent.record_percepts(w.get_percepts(), w.agent.loc)
+        w.agent.record_percepts(w.get_percepts())
         w.take_action("forward")
-        w.agent.record_percepts(w.get_percepts(), w.agent.loc)
+        w.agent.record_percepts(w.get_percepts())
         student_possible_worlds = w.agent.enumerate_possible_worlds()
         student_model_of_KB = w.agent.find_model_of_KB(student_possible_worlds)
         solution_model_of_KB = {
@@ -186,11 +186,11 @@ class TestSolution(unittest.TestCase):
     @timeout_decorator.timeout(12)
     def test_model_of_KB_2(self):
         w = WampaWorld(S1)
-        w.agent.record_percepts(w.get_percepts(), w.agent.loc)
+        w.agent.record_percepts(w.get_percepts())
         w.take_action("forward")
-        w.agent.record_percepts(w.get_percepts(), w.agent.loc)
+        w.agent.record_percepts(w.get_percepts())
         w.agent.loc = (1, 0)
-        w.agent.record_percepts(w.get_percepts(), w.agent.loc)
+        w.agent.record_percepts(w.get_percepts())
         student_possible_worlds = w.agent.enumerate_possible_worlds()
         student_model_of_KB = w.agent.find_model_of_KB(student_possible_worlds)
         solution_model_of_KB = {
@@ -207,21 +207,21 @@ class TestSolution(unittest.TestCase):
     @timeout_decorator.timeout(12)
     def test_model_of_KB_3(self):
         w = WampaWorld(S1)
-        w.agent.record_percepts(w.get_percepts(), w.agent.loc)
+        w.agent.record_percepts(w.get_percepts())
         w.take_action("forward")
-        w.agent.record_percepts(w.get_percepts(), w.agent.loc)
+        w.agent.record_percepts(w.get_percepts())
         w.take_action("left")
         w.take_action("forward")
-        w.agent.record_percepts(w.get_percepts(), w.agent.loc)
+        w.agent.record_percepts(w.get_percepts())
         w.agent.infer_wall_locations()
         w.take_action("left")
         w.take_action("forward")
         w.take_action("left")
         w.take_action("forward")
-        w.agent.record_percepts(w.get_percepts(), w.agent.loc)
+        w.agent.record_percepts(w.get_percepts())
         w.take_action("right")
         w.take_action("forward")
-        w.agent.record_percepts(w.get_percepts(), w.agent.loc)
+        w.agent.record_percepts(w.get_percepts())
         w.agent.infer_wall_locations()
         student_possible_worlds = w.agent.enumerate_possible_worlds()
         student_model_of_KB = w.agent.find_model_of_KB(student_possible_worlds)
@@ -395,9 +395,9 @@ class TestSolution(unittest.TestCase):
     @timeout_decorator.timeout(12)
     def test_all_safe_next_actions(self):
         w = WampaWorld(S1)
-        w.agent.record_percepts(w.get_percepts(), w.agent.loc)
+        w.agent.record_percepts(w.get_percepts())
         w.take_action("forward")
-        w.agent.record_percepts(w.get_percepts(), w.agent.loc)
+        w.agent.record_percepts(w.get_percepts())
         student_actions = w.agent.all_safe_next_actions()
         left_in_student_actions = True if "left" in student_actions else False
         right_in_student_actions = True if "right" in student_actions else False
