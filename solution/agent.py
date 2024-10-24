@@ -134,7 +134,7 @@ class Agent:
     def find_model_of_KB(self, possible_worlds):
         """Return the subset of all possible worlds consistent with KB.
         possible_worlds is a set of tuples (pit_rooms, wampa_room),
-        pit_rooms is a set of tuples of possible pit rooms,
+        pit_rooms is a frozenset of tuples of possible pit rooms,
         and wampa_room is a tuple representing a possible wampa room.
         A world is consistent with the KB if the wampa location is consistent
         and all pit rooms are consistent with the KB."""
@@ -146,7 +146,7 @@ class Agent:
 
     def find_model_of_query(self, query, room, possible_worlds):
         """Where query can be "pit_in_room", "wampa_in_room", "no_pit_in_room"
-        or "no_wampa_in_room", filter the set of worlds
+        or "no_wampa_in_room", filter the set of possible worlds
         according to the query and room."""
         query_to_filter = {
             "pit_in_room": lambda world: room in world[0],

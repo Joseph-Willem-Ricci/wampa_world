@@ -184,7 +184,7 @@ class TestSolution(unittest.TestCase):
 
     @weight(5)
     @timeout_decorator.timeout(12)
-    def test_model_of_KB_2(self):  # NOTE: This test case relies on tuple order.
+    def test_model_of_KB_2(self):
         w = WampaWorld(S1)
         w.agent.record_percepts(w.get_percepts(), w.agent.loc)
         w.take_action("forward")
