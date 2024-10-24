@@ -11,7 +11,7 @@ class KB:
         self.visited_rooms = {agent.loc}  # set of visited rooms (x, y)
         self.stench = set()  # set of rooms where stench has been perceived
         self.breeze = set()  # set of rooms where breeze has been perceived
-        self.bump = dict()  # {loc: direction} of most recent bump
+        self.bump = dict()  # {loc: direction} of most recent bump in loc
         self.gasp = False  # True if gasp has been perceived
         self.scream = False  # True if scream has been perceived
         self.walls = set()  # set of rooms (x, y) that are known to be walls
