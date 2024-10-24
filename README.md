@@ -90,7 +90,7 @@ which corresponds to every combination of pit locations and wampa location in th
 - Return True if the room could be a pit given breeze in KB, False otherwise. A room could be a pit if all adjacent rooms that have been visited have had breeze perceived in them. A room cannot be a pit if any adjacent rooms that have been visited have not had breeze perceived in them. This will be used to find the model of the KB.
 
 `wampa_room_is_consistent_with_KB(self, room)`
-- Return True if the room could be a wampa given stench in KB, False otherwise. A room could be a wampa if all adjacent rooms that have been visited have had stench perceived in them. A room cannot be a wampa if any adjacent rooms that have been visited have not had stench perceived in them. This will be used to find the model of the KB.
+- Return True if the room could be a wampa given stench in KB, False otherwise. A queried wampa room is consistent with the KB if all adjacent rooms that have been visited have had stench perceived in them and if all rooms with stench are adjacent to the queried room. A room cannot be a wampa if any adjacent rooms that have been visited have not had stench perceived in them. This will be used to find the model of the KB.
 
 `find_model_of_KB(self, possible_worlds)`
 - Return the subset of all possible worlds consistent with KB. possible_worlds is a set of tuples (pit_rooms, wampa_room), pit_rooms is a set of tuples of possible pit rooms, and wampa_room is a tuple representing a possible wampa room. A world is consistent with the KB if wampa_room is consistent and all pit rooms are consistent with the KB.

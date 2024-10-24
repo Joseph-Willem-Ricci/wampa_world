@@ -100,10 +100,12 @@ class Agent:
 
     def wampa_room_is_consistent_with_KB(self, wampa_room):
         """Return True if the room could be a wampa given stench in KB, False
-        otherwise. A room could be a wampa if all adjacent rooms that have been
-        visited have had stench perceived in them. A room cannot be a wampa if
-        any adjacent rooms that have been visited have not had stench perceived
-        in them. This will be used to find the model of the KB."""
+        otherwise. A queried wampa room is consistent with the KB if all
+        adjacent rooms that have been visited have had stench perceived in them
+        and if all rooms with stench are adjacent to the queried room.
+        A room cannot be a wampa if any adjacent rooms that have been visited
+        have not had stench perceived in them.
+        This will be used to find the model of the KB."""
         if wampa_room == tuple():  # It is possible that there is no Wampa
             return not self.KB.stench  # if no stench has been perceived yet
         # TODO:
