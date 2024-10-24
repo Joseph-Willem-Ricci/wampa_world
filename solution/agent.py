@@ -51,10 +51,9 @@ class Agent:
         deltas = [(0, 1), (0, -1), (1, 0), (-1, 0)]
         return {(x+dx, y+dy) for dx, dy in deltas if (x+dx, y+dy)}
 
-    def record_percepts(self, sensed_percepts, current_location):
+    def record_percepts(self, sensed_percepts):
         """Update the percepts in agent's KB with the percepts sensed in the
         current location, and update visited_rooms and all_rooms."""
-        self.loc = current_location
         present_percepts = set(p for p in sensed_percepts if p)
         direction = get_direction(self.degrees)
         percept_to_process = {

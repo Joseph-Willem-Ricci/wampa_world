@@ -140,8 +140,7 @@ class WampaWorld:
 def run_game(scenario):
     w = WampaWorld(scenario)
     while w.is_playing:
-        percepts = w.get_percepts()
-        w.agent.record_percepts(percepts, w.agent.loc)
+        w.agent.record_percepts(w.get_percepts())
         w.agent.inference_algorithm()
         action = w.agent.choose_next_action()
         w.take_action(action)

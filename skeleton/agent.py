@@ -51,10 +51,9 @@ class Agent:
         ...
         pass
 
-    def record_percepts(self, sensed_percepts, current_location):
+    def record_percepts(self, sensed_percepts):
         """Update the percepts in agent's KB with the percepts sensed in the
         current location, and update visited_rooms and all_rooms."""
-        self.loc = current_location
         present_percepts = set(p for p in sensed_percepts if p)
         # TODO:
         ...

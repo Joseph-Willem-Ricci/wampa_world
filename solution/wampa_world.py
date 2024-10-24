@@ -155,9 +155,8 @@ class WampaWorld:
 def run_game(scenario):
     w = WampaWorld(scenario)
     while w.is_playing:
-        visualize_world(w, w.agent.loc, get_direction(w.agent.degrees))
-        percepts = w.get_percepts()
-        w.agent.record_percepts(percepts, w.agent.loc)
+        visualize_world(w)
+        w.agent.record_percepts(w.get_percepts())
         w.agent.inference_algorithm()
         action = w.agent.choose_next_action()
         w.take_action(action)

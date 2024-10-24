@@ -1,6 +1,10 @@
+from utils import get_direction
+
 SPACING = 2
 
-def visualize_world(world, r2d2_location, r2d2_direction):
+def visualize_world(world):
+    r2d2_location = world.agent.loc
+    r2d2_direction = get_direction(world.agent.degrees)
     grid_size = world.gridsize
     wampa = world.wampa
     pits = world.pits
