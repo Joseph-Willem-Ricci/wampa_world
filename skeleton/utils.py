@@ -1,4 +1,6 @@
 def flatten(tup):
+    """This may help flatten the output of itertools.combinations()
+    into a tuple. You may find that you don't need it!"""
     if len(tup) == 1:
         return tup[0]
     return tup

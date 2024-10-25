@@ -179,7 +179,7 @@ Contains six scenarios, S1, S2, S3, S4, S5 and S6 to test your program with. Fee
 
 ## utils.py
 
-Contains miscellaneous helper and utility functions. You may want to utilize `flatten(tup)` which may help flatten the output of itertools.combinations() until a tuple, `get_direction(degrees)` which converts degrees to string direction, and `is_facing_wampa(agent)` which returns True if the agent is facing the wampa, according to the inferences in the agent's knowledge base.
+Contains miscellaneous helper and utility functions. You may want to utilize `flatten(tup)` which may help flatten the output of itertools.combinations() into a tuple, `get_direction(degrees)` which converts degrees to string direction, and `is_facing_wampa(agent)` which returns True if the agent is facing the wampa, according to the inferences in the agent's knowledge base.
 
 ## visualize_world.py
 
