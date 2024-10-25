@@ -82,7 +82,7 @@ class Agent:
         subtract the set of rooms that you know cannot have a pit or wampa from
         the set of all rooms. For example, you know that a room with a wall
         cannot have a pit or wampa. A world with no pits or wampas is
-        represented by (frozenset({tuple()}), tuple())
+        represented by (frozenset({()}), ())
 
         Then use itertools.combinations to return the set of possible worlds,
         or all combinations of possible pit and wampa locations.
@@ -99,7 +99,7 @@ class Agent:
         n = len(could_be_pit_or_wampa)
         return set(
             (
-                frozenset(pit_rooms) if pit_rooms else frozenset({tuple()}),
+                frozenset(pit_rooms) if pit_rooms else frozenset({()}),
                 flatten(wampa_room)
             )
             for num_pits in range(n + 1)
@@ -118,7 +118,7 @@ class Agent:
         visited have had breeze perceived in them. A room cannot be a pit if
         any adjacent rooms that have been visited have not had breeze perceived
         in them. This will be used to find the model of the KB."""
-        if room == tuple():  # It is possible that there are no pits
+        if room == ():  # It is possible that there are no pits
             return not self.KB.breeze  # if no breeze has been perceived yet
 
         return all(room in self.KB.breeze or room not in self.KB.visited_rooms
@@ -132,7 +132,7 @@ class Agent:
         A room cannot be a wampa if any adjacent rooms that have been visited
         have not had stench perceived in them.
         This will be used to find the model of the KB."""
-        if room == tuple():  # It is possible that there is no Wampa
+        if room == ():  # It is possible that there is no Wampa
             return not self.KB.stench  # if no stench has been perceived yet
 
         all_adj_rooms_have_stench = all(r in self.KB.stench or 
