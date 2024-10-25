@@ -62,7 +62,7 @@ class TestSolution(unittest.TestCase):
     def test_enumerate_possible_worlds_2(self):
         w = WampaWorld(S1)
         w.take_action("forward")
-        w.agent.KB.all_rooms = {(0, 1), (0, 0), (-1, 1), (1, 1), (-1, 0), (0, 2), (1, 0), (0, -1)}
+        w.agent.KB.all_locs = {(0, 1), (0, 0), (-1, 1), (1, 1), (-1, 0), (0, 2), (1, 0), (0, -1)}
         w.agent.KB.safe_rooms = {(0, 0), (0, 1), (1, 0), (-1, 0), (0, -1)}
         w.agent.KB.stench = {(0, 1)}
         w.agent.KB.visited_rooms = {(0, 0), (0, 1)}
@@ -98,7 +98,7 @@ class TestSolution(unittest.TestCase):
     def test_enumerate_possible_worlds_3(self):
         w = WampaWorld(S1)
         w.agent.loc = (1, 0)
-        w.agent.KB.all_rooms = {(0, 1), (0, 0), (-1, 1), (1, 1), (2, 0), (1, -1), (-1, 0), (0, 2), (1, 0), (0, -1)}
+        w.agent.KB.all_locs = {(0, 1), (0, 0), (-1, 1), (1, 1), (2, 0), (1, -1), (-1, 0), (0, 2), (1, 0), (0, -1)}
         w.agent.KB.safe_rooms = {(0, 1), (0, 0), (-1, 1), (1, 1), (1, -1), (-1, 0), (1, 0), (0, -1)}
         w.agent.KB.stench = {(0, 1)}
         w.agent.KB.breeze = {(1, 0)}

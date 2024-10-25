@@ -6,7 +6,7 @@ from utils import flatten, get_direction, is_facing_wampa
 # KNOWLEDGE BASE
 class KB:
     def __init__(self, agent):
-        self.all_rooms = {agent.loc}  # set of rooms that are known to exist
+        self.all_locs = {agent.loc}  # set of rooms that are known to exist
         self.safe_rooms = {agent.loc}  # set of rooms that are known to be safe
         self.visited_rooms = {agent.loc}  # set of visited rooms (x, y)
         self.stench = set()  # set of rooms where stench has been perceived
@@ -29,7 +29,6 @@ class Agent:
         self.degrees = 0
         self.blaster = True
         self.has_luke = False
-        self.percepts = ['stench', 'breeze', 'gasp', 'bump', 'scream']
         self.orientation_to_delta = {
             "up": (0, 1),  # (dx, dy)
             "down": (0, -1),
@@ -46,16 +45,16 @@ class Agent:
 
     def adjacent_locs(self, room):
         """Returns a set of tuples representing all possible adjacent
-        locations to 'room'. Use this function to update KB.all_rooms."""
+        locations to 'room'. Use this function to update KB.all_locs."""
         # TODO:
         ...
         pass
 
     def record_percepts(self, sensed_percepts):
         """Update the percepts in agent's KB with the percepts sensed in the
-        current location, and update visited_rooms and all_rooms with
-        each adjacent location to the current location. Remember that an
-        adjacent wall is considered a room with a wall feature."""
+        current location, and update visited_rooms and update all_locs with
+        each adjacent location to the current location (since each adjacent
+        location to the current location must exist)."""
         present_percepts = set(p for p in sensed_percepts if p)
         # TODO:
         ...
@@ -136,10 +135,10 @@ class Agent:
     def infer_wall_locations(self):
         """If a bump is perceived, infer wall locations along the entire known
         length of the room."""
-        min_x = min(self.KB.all_rooms, key=lambda x: x[0])[0]
-        max_x = max(self.KB.all_rooms, key=lambda x: x[0])[0]
-        min_y = min(self.KB.all_rooms, key=lambda x: x[1])[1]
-        max_y = max(self.KB.all_rooms, key=lambda x: x[1])[1]
+        min_x = min(self.KB.all_locs, key=lambda x: x[0])[0]
+        max_x = max(self.KB.all_locs, key=lambda x: x[0])[0]
+        min_y = min(self.KB.all_locs, key=lambda x: x[1])[1]
+        max_y = max(self.KB.all_locs, key=lambda x: x[1])[1]
         for room, orientation in self.KB.bump.items():
             if orientation == "up":
                 for x in range(min_x, max_x + 1, 1):
