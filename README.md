@@ -26,6 +26,10 @@ To run the game, run the following command in your terminal from your homework's
 
 This will instantiate a `WampaWorld` class in `wampa_world.py` with the provided scenario, and call `run_game(scenario)`, which iteratively visualizes the world, calls the agent's `record_percepts()` method, calls the agent's `inference_algorithm()` method, calls the agent's `choose_next_action()` method, and then calls the world's `take_action()` method, which updates the agent's location, direction, score, etc.
 
+In each iteration, using the percepts in the knowledge base, the inference algorithm will try to infer whether any adjacent rooms are safe to move to, whether they contain a pit, or whether they contain a wampa. Based on this inferred knowledge, the agent can choose safe and valid next actions. It is possible to solve all scenarios without taking any "risks" (by only moving forward when the forward room is known to be safe).
+
+Remember that the environment is fully observable to you, the programmer, but is partially observable to R2-D2.
+
 Be sure you are running a python version > 3.10.12
 
 # File Structure
@@ -195,7 +199,7 @@ Contains the WampaWorld class which defines gameplay and the main gameplay loop.
 
 Upload your file `agent.py` to the Gradescope assignment submission.
 
-A (non-exhaustive) suite of test cases for each method can help you throubleshoot and ascertain whether you are along the right track.
+A (non-exhaustive) suite of test cases for each method can help you troubleshoot and ascertain whether you are along the right track.
 
 Your final score is meant to help you judge the effectiveness of your action choice logic, and is not graded. With that said, especially on larger scenarios like S4, it is probable that the autograder will timeout if your implementation relies exclusively on random action choice.
 
@@ -229,9 +233,11 @@ possible_worlds = w.agent.enumerate_possible_worlds()
 print(w.agent.find_model_of_KB(possible_worlds))
 ```
 
-## FEW (Frequently Encountered Wonderings)
+## FEWPHE (Frequently Encountered Wonderings, Possible Hypotheses, and Elenchi)
 
-Instead of an "FAQ" this "FEW" (Frequently Encountered Wonderings) is modelled on the stages of the [Socratic Method](https://en.wikiversity.org/wiki/Socratic_Methods#Stages_of_the_Socratic_Method). Rather than asking a question like "Why isn't this working?" and expecting a definitive answer in response, it is more productive for your own troubleshooting and instructive for your own learning to frame diaglogue with your interlocutor through this lens. First, *wonder*! E.g. "Why isn't this working?". Second, propose a *hypothesis*. E.g. "I see expected behavior X is not working, so I think it has something to do with Y". Third, go through *Elenchus* with your interlocutor (TA); one or many questions in response that test and put under scrutiny your presumptions and stimulate your own critical thinking. Fourth, *revise* your hypothesis and fifth, *act accordingly*.
+Instead of an "FAQ" this "FEWPHE" is modelled on the stages of the [Socratic Method](https://en.wikiversity.org/wiki/Socratic_Methods#Stages_of_the_Socratic_Method) and is meant to gently steer your line of inquiry toward the immensely instructive and rewarding experience of *discovering* solutions (as opposed to being told the solution). First, *wonder*! E.g. "Why isn't this working?". Second, propose a *hypothesis*. E.g. "I see expected behavior X is not working, so perhaps it has something to do with Y". Third, go through *Elenchus* with your interlocutor (TA); one or many questions in response that scrutinze and test your presumptions in order to stimulate your own critical thinking. Fourth, *revise* your hypothesis and fifth, *act accordingly*.
+
+Usage: "FEWPHE! I'm so glad I *discovered* the solution!"
 
 ### 1
 Wondering: "My implementation is passing S1 - S5, but failing S6. Why?
