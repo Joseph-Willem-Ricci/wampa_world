@@ -44,9 +44,9 @@ class Agent:
     def turn_right(self):
         self.degrees += 90
 
-    def adjacent_rooms(self, room):
-        """Returns a set of tuples representing all possible adjacent rooms to
-        'room' Use this function to update KB.all_rooms."""
+    def adjacent_locs(self, room):
+        """Returns a set of tuples representing all possible adjacent
+        locations to 'room'. Use this function to update KB.all_rooms."""
         x, y = room
         deltas = [(0, 1), (0, -1), (1, 0), (-1, 0)]
         return {(x+dx, y+dy) for dx, dy in deltas if (x+dx, y+dy)}
@@ -67,7 +67,7 @@ class Agent:
             percept_to_process[percept]()
 
         self.KB.visited_rooms.add(self.loc)
-        self.KB.all_rooms.update(self.adjacent_rooms(self.loc))
+        self.KB.all_rooms.update(self.adjacent_locs(self.loc))
 
     def enumerate_possible_worlds(self):
         """Return the set of all possible worlds, where a possible world is a
@@ -116,7 +116,7 @@ class Agent:
             return not self.KB.breeze  # if no breeze has been perceived yet
 
         return all(room in self.KB.breeze or room not in self.KB.visited_rooms
-                   for room in self.adjacent_rooms(room))
+                   for room in self.adjacent_locs(room))
 
     def wampa_room_is_consistent_with_KB(self, room):
         """Return True if the room could be a wampa given stench in KB, False
@@ -131,8 +131,8 @@ class Agent:
 
         all_adj_rooms_have_stench = all(r in self.KB.stench or 
                                         r not in self.KB.visited_rooms 
-                                        for r in self.adjacent_rooms(room))
-        all_stench_is_adjacent = all(stench_room in self.adjacent_rooms(room)
+                                        for r in self.adjacent_locs(room))
+        all_stench_is_adjacent = all(stench_room in self.adjacent_locs(room)
                                      for stench_room in self.KB.stench)
         return all_adj_rooms_have_stench and all_stench_is_adjacent
 
@@ -206,7 +206,7 @@ class Agent:
 
         # infer that adjacent rooms are safe if there is no breeze or stench
         if self.loc not in self.KB.breeze | self.KB.stench:
-            self.KB.safe_rooms.update(self.adjacent_rooms(self.loc))
+            self.KB.safe_rooms.update(self.adjacent_locs(self.loc))
 
         # make inferences based on bump, gasp and scream percepts
         self.infer_wall_locations()
@@ -232,7 +232,7 @@ class Agent:
 
         # for each query in each adj. room, find the model of the query
         # and check if query is entailed by KB
-        for adj_room in self.adjacent_rooms(self.loc):
+        for adj_room in self.adjacent_locs(self.loc):
             for query, inferences in queries_to_inferences.items():
                 model_of_query = self.find_model_of_query(query, adj_room,
                                                           possible_worlds)

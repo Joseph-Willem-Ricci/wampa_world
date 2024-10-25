@@ -44,9 +44,9 @@ class Agent:
     def turn_right(self):
         self.degrees += 90
 
-    def adjacent_rooms(self, room):
-        """Returns a set of tuples representing all possible adjacent rooms to
-        'room' Use this function to update KB.all_rooms."""
+    def adjacent_locs(self, room):
+        """Returns a set of tuples representing all possible adjacent
+        locations to 'room'. Use this function to update KB.all_rooms."""
         # TODO:
         ...
         pass
