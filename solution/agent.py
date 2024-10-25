@@ -53,7 +53,9 @@ class Agent:
 
     def record_percepts(self, sensed_percepts):
         """Update the percepts in agent's KB with the percepts sensed in the
-        current location, and update visited_rooms and all_rooms."""
+        current location, and update visited_rooms and all_rooms with
+        each adjacent location to the current location. Remember that an
+        adjacent wall is considered a room with a wall feature."""
         present_percepts = set(p for p in sensed_percepts if p)
         direction = get_direction(self.degrees)
         percept_to_process = {
