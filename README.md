@@ -51,7 +51,7 @@ Expected output: `{(1, 3), (3, 3), (2, 2), (2, 4)}`
 - Update the percepts in agent's KB with the percepts sensed in the current location, and update visited_rooms and update all_locs with each adjacent location to the current location (since each adjacent location to the current location must exist).
 
 `enumerate_possible_worlds(self)`
-- Return the set of all possible worlds, where a possible world is a tuple of (pit_rooms, wampa_room), pit_rooms is a frozenset of tuples representing possible pit rooms, and wampa_room is a tuple representing a possible wampa room. Since the goal is to combinatorially enumerate all the possible worlds (pit and wampa locations) over the set of rooms that could potentially have a pit or a wampa, we first want to find that set. To do that, subtract the set of rooms that you know cannot have a pit or wampa from the set of all rooms. For example, you know that a room with a wall cannot have a pit or wampa. A world with no pits or wampas is represented by (frozenset(), tuple()). Then use itertools.combinations to return the set of possible worlds, or all combinations of possible pit and wampa locations. You may find the utils.flatten(tup) method useful here for flattening wampa_room from a tuple of tuples into a tuple. The output of this function will be queried to find the model of the query, and will be checked for consistency with the KB to find the model of the KB.
+- Return the set of all possible worlds, where a possible world is a tuple of (pit_rooms, wampa_room), pit_rooms is a frozenset of tuples representing possible pit rooms, and wampa_room is a tuple representing a possible wampa room. Since the goal is to combinatorially enumerate all the possible worlds (pit and wampa locations) over the set of rooms that could potentially have a pit or a wampa, we first want to find that set. To do that, subtract the set of rooms that you know cannot have a pit or wampa from the set of all rooms. For example, you know that a room with a wall cannot have a pit or wampa. A world with no pits or wampas is represented by (frozenset({()}), ()). Then use itertools.combinations to return the set of possible worlds, or all combinations of possible pit and wampa locations. You may find the utils.flatten(tup) method useful here for flattening wampa_room from a tuple of tuples into a tuple. The output of this function will be queried to find the model of the query, and will be checked for consistency with the KB to find the model of the KB.
 
 From step 0, the initial position on scenario S1:
 ```
@@ -60,7 +60,7 @@ W L P .
 . . . .
 ^ . P .
 ```
-Expected output `{frozenset(), ()}`. Since all adjacent rooms are known to be safe when there is no breeze and no stench in the current room, so all rooms in `KB.all_locs` are known to be safe, so there are no possible worlds with pits or wampas.
+Expected output `{frozenset({()}), ()}`. Since all adjacent rooms are known to be safe when there is no breeze and no stench in the current room, so all rooms in `KB.all_locs` are known to be safe, so there are no possible worlds with pits or wampas.
 
 From step 1, in the following position resulting from a forward action:
 ```
@@ -72,10 +72,10 @@ W L P .
 Expected output, `possible_worlds = `
 ```
 {
-    (frozenset(), ()),
-    (frozenset(), (-1, 1)),
-    (frozenset(), (0, 2)),
-    (frozenset(), (1, 1)),
+    (frozenset({()}), ()),
+    (frozenset({()}), (-1, 1)),
+    (frozenset({()}), (0, 2)),
+    (frozenset({()}), (1, 1)),
     (frozenset({(-1, 1)}), ()),
     (frozenset({(-1, 1)}), (0, 2)),
     (frozenset({(-1, 1)}), (1, 1)),
@@ -110,9 +110,9 @@ Input: `possible_worlds`, from step 1.
 Output, `model_of_KB =`
 ```
 {
-    (frozenset(), (-1, 1)),
-    (frozenset(), (0, 2)),
-    (frozenset(), (1, 1))
+    (frozenset({()}), (-1, 1)),
+    (frozenset({()}), (0, 2)),
+    (frozenset({()}), (1, 1))
 }
 ```
 which is the subset of worlds from `possible_worlds` that "checked out" with the model of the KB. No breeze has been perceived yet, so the only worlds that are consistent with the KB are those with no pits. And with stench perceived in `(0, 1)`, rooms `{(-1, 1), (0, 2), (1, 1)}` are the only rooms that `wampa_room_is_consistent_with_KB` returns True for.
@@ -150,7 +150,7 @@ Inputs: `"wampa_in_room", (0, 2), possible_worlds` from step 1.
 Output:
 ```
 {
-    (frozenset(), (0, 2)),
+    (frozenset({()}), (0, 2)),
     (frozenset({(-1, 1)}), (0, 2)),
     (frozenset({(-1, 1), (1, 1)}), (0, 2)),
     (frozenset({(1, 1)}), (0, 2))

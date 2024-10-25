@@ -55,7 +55,7 @@ class TestSolution(unittest.TestCase):
     def test_enumerate_possible_worlds_1(self):
         w = WampaWorld(S1)
         student_possible_worlds = w.agent.enumerate_possible_worlds()
-        self.assertEqual(student_possible_worlds, {(frozenset(), ())}, msg = "Expected possible worlds from initial position before recording percepts to be {frozenset(), ()}, as shown in README.")
+        self.assertEqual(student_possible_worlds, {(frozenset({()}), ())}, msg = "Expected possible worlds from initial position before recording percepts to be {frozenset(), ()}, as shown in README.")
 
     @weight(3)
     @timeout_decorator.timeout(12)
@@ -70,10 +70,10 @@ class TestSolution(unittest.TestCase):
         student_possible_worlds = w.agent.enumerate_possible_worlds()
 
         solution_possible_worlds = {
-            (frozenset(), ()),
-            (frozenset(), (-1, 1)),
-            (frozenset(), (0, 2)),
-            (frozenset(), (1, 1)),
+            (frozenset({()}), ()),
+            (frozenset({()}), (-1, 1)),
+            (frozenset({()}), (0, 2)),
+            (frozenset({()}), (1, 1)),
             (frozenset({(-1, 1)}), ()),
             (frozenset({(-1, 1)}), (0, 2)),
             (frozenset({(-1, 1)}), (1, 1)),
@@ -176,9 +176,9 @@ class TestSolution(unittest.TestCase):
         student_possible_worlds = w.agent.enumerate_possible_worlds()
         student_model_of_KB = w.agent.find_model_of_KB(student_possible_worlds)
         solution_model_of_KB = {
-            (frozenset(), (-1, 1)),
-            (frozenset(), (0, 2)),
-            (frozenset(), (1, 1))
+            (frozenset({()}), (-1, 1)),
+            (frozenset({()}), (0, 2)),
+            (frozenset({()}), (1, 1))
         }
         self.assertEqual(student_model_of_KB, solution_model_of_KB, msg = "Expected model of KB after 'forward' from initial position on S1 to be as shown in README.")
 
@@ -238,10 +238,10 @@ class TestSolution(unittest.TestCase):
         w = WampaWorld(S1)
         a = Agent(w)
         possible_worlds = {
-            (frozenset(), ()),
-            (frozenset(), (-1, 1)),
-            (frozenset(), (0, 2)),
-            (frozenset(), (1, 1)),
+            (frozenset({()}), ()),
+            (frozenset({()}), (-1, 1)),
+            (frozenset({()}), (0, 2)),
+            (frozenset({()}), (1, 1)),
             (frozenset({(-1, 1)}), ()),
             (frozenset({(-1, 1)}), (0, 2)),
             (frozenset({(-1, 1)}), (1, 1)),
@@ -261,7 +261,7 @@ class TestSolution(unittest.TestCase):
         }
 
         solution_model_of_query = {
-            (frozenset(), (0, 2)),
+            (frozenset({()}), (0, 2)),
             (frozenset({(-1, 1)}), (0, 2)),
             (frozenset({(-1, 1), (1, 1)}), (0, 2)),
             (frozenset({(1, 1)}), (0, 2))
@@ -276,26 +276,26 @@ class TestSolution(unittest.TestCase):
         w = WampaWorld(S1)
         a = Agent(w)
         possible_worlds = {
-            ((), ()),
-            ((), (-1, 1)),
-            ((), (0, 2)),
-            ((), (1, 1)),
-            (((-1, 1),), ()),
-            (((-1, 1),), (0, 2)),
-            (((-1, 1),), (1, 1)),
-            (((-1, 1), (0, 2)), ()),
-            (((-1, 1), (0, 2)), (1, 1)),
-            (((-1, 1), (1, 1)), ()),
-            (((-1, 1), (1, 1)), (0, 2)),
-            (((-1, 1), (1, 1), (0, 2)), ()),
-            (((0, 2),), ()),
-            (((0, 2),), (-1, 1)),
-            (((0, 2),), (1, 1)),
-            (((1, 1),), ()),
-            (((1, 1),), (-1, 1)),
-            (((1, 1),), (0, 2)),
-            (((1, 1), (0, 2)), ()),
-            (((1, 1), (0, 2)), (-1, 1))
+            (frozenset({()}), ()),
+            (frozenset({()}), (-1, 1)),
+            (frozenset({()}), (0, 2)),
+            (frozenset({()}), (1, 1)),
+            (frozenset({(-1, 1)}), ()),
+            (frozenset({(-1, 1)}), (0, 2)),
+            (frozenset({(-1, 1)}), (1, 1)),
+            (frozenset({(-1, 1), (0, 2)}), ()),
+            (frozenset({(-1, 1), (0, 2)}), (1, 1)),
+            (frozenset({(-1, 1), (1, 1)}), ()),
+            (frozenset({(-1, 1), (1, 1)}), (0, 2)),
+            (frozenset({(-1, 1), (1, 1), (0, 2)}), ()),
+            (frozenset({(0, 2)}), ()),
+            (frozenset({(0, 2)}), (-1, 1)),
+            (frozenset({(0, 2)}), (1, 1)),
+            (frozenset({(1, 1)}), ()),
+            (frozenset({(1, 1)}), (-1, 1)),
+            (frozenset({(1, 1)}), (0, 2)),
+            (frozenset({(1, 1), (0, 2)}), ()),
+            (frozenset({(1, 1), (0, 2)}), (-1, 1))
         }
         student_model_of_query = a.find_model_of_query("no_wampa_in_room", (0, 2), possible_worlds)
         model_of_query_contains_0_2 = any([True for model in student_model_of_query if (0, 2) in model[1]])
@@ -307,10 +307,10 @@ class TestSolution(unittest.TestCase):
         w = WampaWorld(S1)
         a = Agent(w)
         possible_worlds = {
-            (frozenset(), ()),
-            (frozenset(), (-1, 1)),
-            (frozenset(), (0, 2)),
-            (frozenset(), (1, 1)),
+            (frozenset({()}), ()),
+            (frozenset({()}), (-1, 1)),
+            (frozenset({()}), (0, 2)),
+            (frozenset({()}), (1, 1)),
             (frozenset({(-1, 1)}), ()),
             (frozenset({(-1, 1)}), (0, 2)),
             (frozenset({(-1, 1)}), (1, 1)),
@@ -349,10 +349,10 @@ class TestSolution(unittest.TestCase):
         w = WampaWorld(S1)
         a = Agent(w)
         possible_worlds = {
-            (frozenset(), ()),
-            (frozenset(), (-1, 1)),
-            (frozenset(), (0, 2)),
-            (frozenset(), (1, 1)),
+            (frozenset({()}), ()),
+            (frozenset({()}), (-1, 1)),
+            (frozenset({()}), (0, 2)),
+            (frozenset({()}), (1, 1)),
             (frozenset({(-1, 1)}), ()),
             (frozenset({(-1, 1)}), (0, 2)),
             (frozenset({(-1, 1)}), (1, 1)),
@@ -372,10 +372,10 @@ class TestSolution(unittest.TestCase):
         }
 
         solution_model_of_query = {
-            (frozenset(), ()),
-            (frozenset(), (-1, 1)),
-            (frozenset(), (0, 2)),
-            (frozenset(), (1, 1)),
+            (frozenset({()}), ()),
+            (frozenset({()}), (-1, 1)),
+            (frozenset({()}), (0, 2)),
+            (frozenset({()}), (1, 1)),
             (frozenset({(-1, 1)}), ()),
             (frozenset({(-1, 1)}), (0, 2)),
             (frozenset({(-1, 1)}), (1, 1)),
