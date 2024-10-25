@@ -20,9 +20,11 @@ Percepts: `['stench', 'breeze', 'gasp', 'bump', 'scream']`, where at some locati
 
 Actions: `'left', 'right', 'forward', 'grab', 'climb', 'shoot'`
 
-To run the game, run the following command in your terminal from your homework's directory
+To run the game, run the following command in your terminal from your homework's directory.
 
 `python wampa_world.py <scenario>`
+
+This will instantiate a `WampaWorld` class in `wampa_world.py` with the provided scenario, and call `run_game(scenario)`, which iteratively visualizes the world, calls the agent's `record_percepts()` method, calls the agent's `inference_algorithm()` method, calls the agent's `choose_next_action()` method, and then calls the world's `take_action()` method, which updates the agent's location, direction, score, etc.
 
 Be sure you are running a python version > 3.10.12
 
@@ -195,6 +197,14 @@ Upload your file `agent.py` to the Gradescope assignment submission.
 
 A (non-exhaustive) suite of test cases for each method can help you throubleshoot and ascertain whether you are along the right track.
 
+Your final score is meant to help you judge the effectiveness of your action choice logic, and is not graded. With that said, especially on larger scenarios like S4, it is probable that the autograder will timeout if your implementation relies exclusively on random action choice.
+
+## Interpreting Autograder Results
+
+"Items in the first set but not the second:" are items in your program's result that are not in the expected result.
+
+"Items in the second set but not the first:" are items in the expected result that are not in your program's result.
+
 # Tips
 
 ## Debugging
@@ -226,6 +236,13 @@ Instead of an "FAQ" this "FEW" (Frequently Encountered Wonderings) is modelled o
 ### 1
 Wondering: "My implementation is passing S1 - S5, but failing S6. Why?
 
-Possible Hypothesis: "It must have something to do with how R2 is not inferring (0, 2) to be safe."
+Possible Hypothesis: "Perhaps it has something to do with how R2 is not inferring (0, 2) to be safe."
 
 Elenchus: When you inspect the initial scenario, what do you see in (0, 2)?
+
+### 2
+Wondering: "My implementation is passing all method test cases but timing out on the run_game test cases. Why?"
+
+Possible Hypothesis: "Perhaps it has something to do with how my take_next_action method is choosing actions randomly."
+
+Elenchus: That is quite possible! Try thinking about what bits of logic you could incorporate to prioritize exploration of unvisited locations, for example. What other situations are there that you could prioritize certain actions over others? It is also possible that your code could be made more efficient in certain areas. What techniques do you know of to made certain blocks of logic more efficient? Which method in particular is likely the most computationally intensive?
