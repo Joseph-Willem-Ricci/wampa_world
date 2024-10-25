@@ -41,14 +41,14 @@ Contains R2-D2's constructor including initial knowledge base class, KB. Familia
 ### TODOs:
 
 `adjacent_locs(self, room):`
-- Returns a set of tuples representing all possible adjacent locations to 'room'. Use this function to update KB.all_rooms.
+- Returns a set of tuples representing all possible adjacent locations to 'room'. Use this function to update KB.all_locs.
 
 Input: `(2, 3)`
 
 Expected output: `{(1, 3), (3, 3), (2, 2), (2, 4)}`
 
 `record_percepts(self, sensed_percepts):`
-- Update the percepts in agent's KB with the percepts sensed in the current location, and update visited_rooms and update all_rooms with each adjacent location to the current location (since each adjacent location to the current location must exist).
+- Update the percepts in agent's KB with the percepts sensed in the current location, and update visited_rooms and update all_locs with each adjacent location to the current location (since each adjacent location to the current location must exist).
 
 `enumerate_possible_worlds(self)`
 - Return the set of all possible worlds, where a possible world is a tuple of (pit_rooms, wampa_room), pit_rooms is a frozenset of tuples representing possible pit rooms, and wampa_room is a tuple representing a possible wampa room. Since the goal is to combinatorially enumerate all the possible worlds (pit and wampa locations) over the set of rooms that could potentially have a pit or a wampa, we first want to find that set. To do that, subtract the set of rooms that you know cannot have a pit or wampa from the set of all rooms. For example, you know that a room with a wall cannot have a pit or wampa. A world with no pits or wampas is represented by (frozenset(), tuple()). Then use itertools.combinations to return the set of possible worlds, or all combinations of possible pit and wampa locations. You may find the utils.flatten(tup) method useful here for flattening wampa_room from a tuple of tuples into a tuple. The output of this function will be queried to find the model of the query, and will be checked for consistency with the KB to find the model of the KB.
@@ -60,7 +60,7 @@ W L P .
 . . . .
 ^ . P .
 ```
-Expected output `{frozenset(), ()}`. Since all adjacent rooms are known to be safe when there is no breeze and no stench in the current room, so all rooms in `KB.all_rooms` are known to be safe, so there are no possible worlds with pits or wampas.
+Expected output `{frozenset(), ()}`. Since all adjacent rooms are known to be safe when there is no breeze and no stench in the current room, so all rooms in `KB.all_locs` are known to be safe, so there are no possible worlds with pits or wampas.
 
 From step 1, in the following position resulting from a forward action:
 ```
@@ -237,7 +237,7 @@ print(w.agent.find_model_of_KB(possible_worlds))
 
 Instead of an "FAQ" this "FEWPHE" is modelled on the stages of the [Socratic Method](https://en.wikiversity.org/wiki/Socratic_Methods#Stages_of_the_Socratic_Method) and is meant to gently steer your line of inquiry toward the immensely instructive and rewarding experience of *discovering* solutions (as opposed to being told the solution). First, *wonder*! E.g. "Why isn't this working?". Second, propose a *hypothesis*. E.g. "I see expected behavior X is not working, so perhaps it has something to do with Y". Third, go through *Elenchus* with your interlocutor (TA); one or many questions in response that scrutinze and test your presumptions in order to stimulate your own critical thinking. Fourth, *revise* your hypothesis and fifth, *act accordingly*.
 
-Usage: "FEWPHE! I'm so glad I *discovered* the solution!"
+Usage: "FEWPHE! I'm so glad I *discovered* the answer!"
 
 ### 1
 Wondering: "My implementation is passing S1 - S5, but failing S6. Why?

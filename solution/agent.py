@@ -98,7 +98,7 @@ class Agent:
         could_be_pit_or_wampa = self.KB.all_locs - is_not_pit_or_wampa
         n = len(could_be_pit_or_wampa)
         return set(
-            (frozenset(pit_rooms), flatten(wampa_room))  # return worlds
+            (frozenset((pit_rooms)), flatten(wampa_room))  # return worlds
             for num_pits in range(n + 1)      # with 0 to n pits
             for num_wampas in range(2)        # with 0 or 1 wampas
             for pit_rooms in comb(could_be_pit_or_wampa, num_pits)
