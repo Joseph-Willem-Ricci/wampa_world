@@ -10,7 +10,7 @@ Along the way, R2-D2 must avoid pits which he can fall into, and must avoid the 
 
 Each m x n playable grid is surrounded by rooms that contain the feature `wall` along x = -1, y = -1, x = m and y = n. For example, a 1 x 1 playable grid would have rooms that contain walls at `{(-1, 0), (0, -1), (0, 1), (1, 0)}`. If R2-D2 moves `forward` into a wall, he perceives a `bump` and stays in the same position.
 
-For this assignment, assume that R2 knows that the world is rectangular and that there are no internal walls, but remember that R2 does not know the size of the grid or locations of any walls until he perceives a bump.a
+For this assignment, assume that R2 knows that the world is rectangular and that there are no internal walls, but remember that R2 does not know the size of the grid or locations of any walls until he perceives a bump.
 
 R2-D2 is also carrying a blaster with one shot and infinite range, and can `shoot` the Wampa with a shot in its direction. If the shot is indeed aimed toward the Wampa, it is killed by the shot, and a `scream` can be perceived in every room.
 
