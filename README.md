@@ -218,3 +218,14 @@ w.agent.record_percepts(w.get_percepts())
 possible_worlds = w.agent.enumerate_possible_worlds()
 print(w.agent.find_model_of_KB(possible_worlds))
 ```
+
+## FEW (Frequently Encountered Wonderings)
+
+Instead of an "FAQ" this "FEW" (Frequently Encountered Wonderings) is modelled on the stages of the [Socratic Method](https://en.wikiversity.org/wiki/Socratic_Methods#Stages_of_the_Socratic_Method). Rather than asking a question like "Why isn't this working?" and expecting a definitive answer in response, it is more productive for your own troubleshooting and instructive for your own learning to frame diaglogue with your interlocutor through this lens. First, *wonder*! E.g. "Why isn't this working?". Second, propose a *hypothesis*. E.g. "I see expected behavior X is not working, so I think it has something to do with Y". Third, go through *Elenchus* with your interlocutor (TA); one or many questions in response that test and put under scrutiny your presumptions and stimulate your own critical thinking. Fourth, *revise* your hypothesis and fifth, *act accordingly*.
+
+### 1
+Wondering: "My implementation is passing S1 - S5, but failing S6. Why?
+
+Possible Hypothesis: "It must have something to do with how R2 is not inferring (0, 2) to be safe."
+
+Elenchus: When you inspect the initial scenario, what do you see in (0, 2)?
