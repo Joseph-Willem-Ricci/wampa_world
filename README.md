@@ -4,15 +4,17 @@ This Wampa World logic-based agent homework was developed by [Joseph Willem Ricc
 
 # Gameplay
 
-R2-D2 begins at the bottom-left location (0, 0) and must navigate the rectangular grid of unknown size. To navigate the grid, [he](https://www.google.com/search?q=r2d2+gender) can turn `left` or `right`, or move `forward`. R2-D2's goal is to rescue Luke by navigating to the room that contains Luke, `grab`ing him, and navigating back to (0, 0) to `climb` out of the cave.
+R2-D2 begins at the bottom-left location (0, 0) and must navigate the rectangular grid of unknown size. To navigate the grid, [he](https://www.google.com/search?q=r2d2+gender) can turn 90 degrees `left` or `right`, or move one square `forward`. R2-D2's goal is to rescue Luke Skywalker by navigating to the room that contains Luke, `grab`ing him, and navigating back to (0, 0) to `climb` out of the cave.
 
-Along the way, R2-D2 must avoid pits which he can fall into, and must avoid the Wampa, which can destroy him. In any adjacent room to a pit is a `breeze`. In any adjacent room to a Wampa is a `stench`. There can be `[0, 1]` Wampas, and there can be `[0, m*n - 2]` pits, where the grid is of size m x n. Each room can have 0 or 1 features from [`luke`, `pit`, `wall`, `wampa`].
+Along the way, R2-D2 must avoid pits which he can fall into, and must avoid the Wampa, which can destroy him. In any adjacent room to a pit is a `breeze`. In any adjacent room to the Wampa is a `stench`. There can be `[0, 1]` Wampas, and there can be `[0, m*n - 2]` pits, where the playable grid is of size m x n. Each room of the m x n playable grid can have 0 or 1 features from [`luke`, `pit`, `wampa`].
 
-R2-D2 is also carrying a blaster with one shot and infinite range, and can "shoot" the Wampa with a shot in its direction. If the Wampa is killed by the shot, a `scream` can be perceived in every room.
+Each m x n playable grid is surrounded by rooms that contain the feature `wall` along x = -1, y = -1, x = m and y = n. For example, a 1 x 1 playable grid would have rooms that contain walls at `{(-1, -1), (-1, 0), (-1, 1), (0, -1), (0, 1), (1, -1), (1, 0), (1, 1)}`. If R2-D2 moves `forward` into a wall, he perceives a `bump` and stays in the same position.
+
+For this assignment, assume that R2 knows that the world is rectangular and that there are no internal walls, but remember that R2 does not know the size of the grid or locations of any walls until he perceives a bump.
+
+R2-D2 is also carrying a blaster with one shot and infinite range, and can `shoot` the Wampa with a shot in its direction. If the shot is indeed aimed toward the Wampa, it is killed by the shot, and a `scream` can be perceived in every room.
 
 A `gasp` from Luke can be perceived by R2-D2 if they are both in the same room.
-
-Finally, if R2-D2 moves `forward` into a wall, he perceives a `bump`. For this assignment, assume that R2 knows that the world is rectangular and that there are no internal walls. A hypothetical 1x1 grid would have walls at `{(-1, -1), (-1, 0), (-1, 1), (0, -1), (0, 1), (1, -1), (1, 0), (1, 1)}`.
 
 Percepts: `['stench', 'breeze', 'gasp', 'bump', 'scream']`, where at some location, R2's percepts might look like `[None, 'breeze', None, 'bump', None]`
 
@@ -21,6 +23,8 @@ Actions: `'left', 'right', 'forward', 'grab', 'climb', 'shoot'`
 To run the game, run the following command in your terminal from your homework's directory
 
 `python wampa_world.py <scenario>`
+
+Be sure you are running a python version > 3.10.12
 
 # File Structure
 
@@ -175,7 +179,7 @@ Contains six scenarios, S1, S2, S3, S4, S5 and S6 to test your program with. Fee
 
 ## utils.py
 
-Contains miscellaneous helper and utility functions. You may want to utilize `flatten(tup)`, `get_direction(degrees)`, `is_facing_wampa(agent)`.
+Contains miscellaneous helper and utility functions. You may want to utilize `flatten(tup)` which may help flatten the output of itertools.combinations() until a tuple, `get_direction(degrees)` which converts degrees to string direction, and `is_facing_wampa(agent)` which returns True if the agent is facing the wampa, according to the inferences in the agent's knowledge base.
 
 ## visualize_world.py
 
@@ -183,10 +187,34 @@ Is called during gameplay to visualize the current state of the world.
 
 ## wampa_world.py
 
-Contains the WampaWorld class which defines gameplay and the main gameplay loop
+Contains the WampaWorld class which defines gameplay and the main gameplay loop. It is recommended to familiarize yourself with the gameplay logic, especially the `run_game` method which is the main game loop that will be calling `agent.record_percepts()`, `agent.inference_algorithm()` and `agent.choose_next_action()`.
 
 # Submission
 
-Upload your file agent.py to the Gradescope assignment submission.
+Upload your file `agent.py` to the Gradescope assignment submission.
 
 A (non-exhaustive) suite of test cases for each method can help you throubleshoot and ascertain whether you are along the right track.
+
+# Tips
+
+## Debugging
+
+You can debug with command line arguments (i.e. `S1`, `S2` ...) by setting up the debug configuration to do so. In VS Code, search "debug Current File with Arguments".
+
+You can also reproduce, inspect and write your own test cases by importing the necessary modules into a test file, and manually scripting actions and inspections. For example:
+
+```python
+from scenarios import *
+from wampa_world import WampaWorld
+from visualize_world import visualize_world
+
+w = WampaWorld(S1)
+visualize_world(w)
+w.agent.record_percepts(w.get_percepts())
+w.agent.inference_algorithm()
+w.take_action("forward")
+visualize_world(w)
+w.agent.record_percepts(w.get_percepts())
+possible_worlds = w.agent.enumerate_possible_worlds()
+print(w.agent.find_model_of_KB(possible_worlds))
+```
