@@ -135,23 +135,22 @@ class Agent:
     def infer_wall_locations(self):
         """If a bump is perceived, infer wall locations along the entire known
         length of the room."""
-        min_x = min(self.KB.all_locs, key=lambda x: x[0])[0]
-        max_x = max(self.KB.all_locs, key=lambda x: x[0])[0]
-        min_y = min(self.KB.all_locs, key=lambda x: x[1])[1]
-        max_y = max(self.KB.all_locs, key=lambda x: x[1])[1]
-        for room, orientation in self.KB.bump.items():
-            if orientation == "up":
-                for x in range(min_x, max_x + 1, 1):
-                    self.KB.walls.add((x, room[1] + 1))
-            elif orientation == "down":
-                for x in range(min_x, max_x + 1, 1):
-                    self.KB.walls.add((x, room[1] - 1))
-            elif orientation == "left":
-                for y in range(min_y, max_y + 1, 1):
-                    self.KB.walls.add((room[0] - 1, y))
-            elif orientation == "right":
-                for y in range(min_y, max_y + 1, 1):
-                    self.KB.walls.add((room[0] + 1, y))
+        if not self.KB.bump:
+            return
+        room, orientation = self.KB.bump.popitem()
+        dx, dy = self.orientation_to_delta[orientation]
+
+        min_x = min(self.KB.all_locs, key=lambda loc: loc[0])[0]
+        max_x = max(self.KB.all_locs, key=lambda loc: loc[0])[0]
+        min_y = min(self.KB.all_locs, key=lambda loc: loc[1])[1]
+        max_y = max(self.KB.all_locs, key=lambda loc: loc[1])[1]
+        _min = {"up": min_x, "down": min_x, "left": min_y, "right": min_y}
+        _max = {"up": max_x, "down": max_x, "left": max_y, "right": max_y}
+
+        for i in range(_min[orientation], _max[orientation] + 1):
+            wall = {"up": (i, room[1] + dy), "down": (i, room[1] + dy),
+                    "left": (room[0] + dx, i), "right": (room[0] + dx, i)}
+            self.KB.walls.add(wall[orientation])
 
     def inference_algorithm(self):
         """First, make some basic inferences:
