@@ -1,6 +1,6 @@
 # Wampa World
 
-This Wampa World logic-based agent homework was developed by [Joseph Willem Ricci](https://github.com/Joseph-Willem-Ricci/) and [Ben Swanson](https://www.linkedin.com/in/benmswanson/) upon [the original Jupyter Notebook](https://laramartin.net/Principles-of-AI/homeworks/logic/HW2-LogicalAgents.ipynb) by [Lara Martin](https://laramartin.net/).
+This Wampa World logic-based agent homework was developed by [Joseph Willem Ricci](https://resonance.tools/about) and [Ben Swanson](https://www.linkedin.com/in/benmswanson/) upon [the original Jupyter Notebook](https://laramartin.net/Principles-of-AI/homeworks/logic/HW2-LogicalAgents.ipynb) by [Lara Martin](https://laramartin.net/).
 
 # Gameplay
 
@@ -36,7 +36,7 @@ Be sure you are running a python version > 3.10.12
 
 ## agent.py
 
-Contains R2-D2's constructor including initial knowledge base class, KB. Familiarize yourself with the knowledge base, as the agent class will be using it for logical inference.
+Contains R2-D2's constructor including initial knowledge base class, `KB`. Familiarize yourself with the knowledge base, as the agent class will be using it for logical inference.
 
 ### TODOs:
 
@@ -143,7 +143,7 @@ which is all of the possible worlds `(pit_rooms, wampa_room)` where `pit_room_is
 
 
 `find_model_of_query(self, query, room, possible_worlds)`
-- Where query can be "pit_in_room", "wampa_in_room", "no_pit_in_room" or "no_wampa_in_room", filter the set of worlds according to the query and room.
+- Where query can be `"pit_in_room"`, `"wampa_in_room"`, `"no_pit_in_room"` or `"no_wampa_in_room"`, filter the set of worlds according to the query and room.
 
 Inputs: `"wampa_in_room", (0, 2), possible_worlds` from step 1.
 
@@ -171,21 +171,21 @@ which is the subset of `possible_worlds` that contain `(0, 2)` in the `wampa_roo
 2. Find the model of the KB, i.e. the subset of possible worlds consistent with the KB.
 3. For each adjacent room and each query, find the model of the query.
 4. If the model of the KB is a subset of the model of the query, the query is entailed by the KB.
-5. Update KB.pits, KB.wampa, and KB.safe_rooms based on any newly derived knowledge.
+5. Update `KB.pits`, `KB.wampa`, and `KB.safe_rooms` based on any newly derived knowledge.
 
 `all_safe_next_actions(self)`
 - Define R2-D2's valid and safe next actions based on his current location and knowledge of the environment.
 
 `choose_next_action(self)`
-- Choose next action from all safe next actions. You may want to prioritize some actions based on current state. For example, if R2-D2 knows Luke's location and is in the same room as Luke, you may want to prioritize 'grab' over all other actions. Similarly, if R2-D2 has Luke, you may want to prioritize moving toward the exit. You can implement this as basically (randomly choosing between safe actions) or as sophisticated (optimizing exploration of unvisited states, finding shortest paths, etc.) as you like.
+- Choose next action from all safe next actions. You may want to prioritize some actions based on current state. For example, if R2-D2 knows Luke's location and is in the same room as Luke, you may want to prioritize `"grab"` over all other actions. Similarly, if R2-D2 has Luke, you may want to prioritize moving toward the exit. You can implement this as basically (randomly choosing between safe actions) or as sophisticated (optimizing exploration of unvisited states, finding shortest paths, etc.) as you like.
 
 ## scenarios.py
 
-Contains six scenarios, S1, S2, S3, S4, S5 and S6 to test your program with. Feel free to write your own!
+Contains six scenarios, `S1`, `S2`, `S3`, `S4`, `S5` and `S6` to test your program with. Feel free to write your own!
 
 ## utils.py
 
-Contains miscellaneous helper and utility functions. You may want to utilize `flatten(tup)` which may help flatten the output of itertools.combinations() into a tuple, `get_direction(degrees)` which converts degrees to string direction, and `is_facing_wampa(agent)` which returns True if the agent is facing the wampa, according to the inferences in the agent's knowledge base.
+Contains miscellaneous helper and utility functions. You may want to utilize `flatten(tup)` which may help flatten the output of `itertools.combinations()` into a tuple, `get_direction(degrees)` which converts degrees to string direction, and `is_facing_wampa(agent)` which returns True if the agent is facing the wampa, according to the inferences in the agent's knowledge base.
 
 ## visualize_world.py
 
@@ -201,7 +201,7 @@ Upload your file `agent.py` to the Gradescope assignment submission.
 
 A (non-exhaustive) suite of test cases for each method can help you troubleshoot and ascertain whether you are along the right track.
 
-Your final score is meant to help you judge the effectiveness of your action choice logic, and is not graded. With that said, especially on larger scenarios like S4, it is probable that the autograder will timeout if your implementation relies exclusively on random action choice.
+Your final score is meant to help you judge the effectiveness of your action choice logic, and is not graded. With that said, especially on larger scenarios like `S4`, it is probable that the autograder will timeout if your implementation relies exclusively on random action choice.
 
 ## Interpreting Autograder Results
 
