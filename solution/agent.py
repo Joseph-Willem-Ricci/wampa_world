@@ -134,7 +134,7 @@ class Agent:
         if room == ():  # It is possible that there is no Wampa
             return not self.KB.stench  # if no stench has been perceived yet
 
-        all_adj_rooms_have_stench = all(r in self.KB.stench or 
+        all_adj_rooms_have_stench = all(r in self.KB.stench or
                                         r not in self.KB.visited_rooms
                                         for r in self.adjacent_locs(room))
 
